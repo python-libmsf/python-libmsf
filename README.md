@@ -187,6 +187,7 @@ Delete workspace:
 ```python
 from libmsf.msf import Msf
 from libmsf.rest import MsfRestApi
+from typing import List
 
 msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
 msf_api_url: str = 'https://localhost:5443'
@@ -197,11 +198,19 @@ workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
 
 workspace.id = msf_rest_api.create_workspace(workspace=workspace)
 print(f'New workspace: {workspace}\n')
+
+all_workspaces: List[Msf.Workspace] = msf_rest_api.get_workspaces()
+print(f'All workspaces: {all_workspaces}\n')
+
+removed_workspace: Msf.Workspace = msf_rest_api.delete_workspace(workspace_name=workspace.name)
+print(f'Removed workspace: {removed_workspace}\n')
+
 ```
 
 ```shell
 >>> from libmsf.msf import Msf
 >>> from libmsf.rest import MsfRestApi
+>>> from typing import List
 >>>
 >>> msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
 >>> msf_api_url: str = 'https://localhost:5443'
@@ -214,7 +223,17 @@ Create workspace:
 >>>
 >>> workspace.id = msf_rest_api.create_workspace(workspace=workspace)
 >>> print(f'New workspace: {workspace}\n')
-New workspace: Msf.Workspace(id=198, name='test_workspace', created_at=None, updated_at=None, boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False)
+New workspace: Msf.Workspace(id=202, name='test_workspace', created_at=None, updated_at=None, boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False)
+
+>>>
+>>> all_workspaces: List[Msf.Workspace] = msf_rest_api.get_workspaces()
+>>> print(f'All workspaces: {all_workspaces}\n')
+All workspaces: [Msf.Workspace(id=1, name='default', created_at='2021-02-16T16:47:41.137Z', updated_at='2021-02-16T16:47:41.137Z', boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False), Msf.Workspace(id=202, name='test_workspace', created_at='2021-04-16T12:16:01.245Z', updated_at='2021-04-16T12:16:01.245Z', boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False)]
+
+>>>
+>>> removed_workspace: Msf.Workspace = msf_rest_api.delete_workspace(workspace_name=workspace.name)
+>>> print(f'Removed workspace: {removed_workspace}\n')
+Removed workspace: Msf.Workspace(id=202, name='test_workspace', created_at='2021-04-16T12:16:01.245Z', updated_at='2021-04-16T12:16:01.245Z', boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False)
 
 ```
 
@@ -222,8 +241,11 @@ New workspace: Msf.Workspace(id=198, name='test_workspace', created_at=None, upd
 msf6 > workspace
   test_workspace
 * default
+msf6 > workspace
+* default
 msf6 >
 ```
 
 </details>
 
+![Delete workspace](images/delete_workspace.png)
