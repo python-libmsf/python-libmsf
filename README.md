@@ -545,6 +545,114 @@ Removed vulns: [Msf.Vuln(id=272, workspace=None, host=Msf.Host(id=226, workspace
 
 ## Loots
 
+```python
+from libmsf.msf import Msf
+from libmsf.rest import MsfRestApi
+from typing import List
+
+msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+msf_api_url: str = 'https://localhost:5443'
+msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+
+workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+host: Msf.Host = Msf.Host(address='192.168.1.1')
+service: Msf.Service = Msf.Service(port=12345)
+
+loot: Msf.Loot = Msf.Loot()
+loot.workspace = workspace.name
+loot.host = host.address
+loot.port = service.port
+loot.ltype = 'unit.test.type'
+loot.data = 'dGVzdA=='
+loot.name = '/tmp/unit.test'
+loot.info = 'Unit test file'
+loot.content_type = 'text/plain'
+loot.path = 'path.txt'
+
+loot.id = msf_rest_api.create_loot(loot=loot)
+print(f'New loot: {loot}\n')
+
+new_loot: Msf.Loot = msf_rest_api.get_loot_by_id(workspace=workspace.name, loot_id=loot.id)
+print(f'New loot by id: {new_loot}\n')
+
+all_loots: List[Msf.Loot] = msf_rest_api.get_loots(workspace=workspace.name)
+print(f'All loots: {all_loots}\n')
+
+removed_loots: List[Msf.Loot] = msf_rest_api.delete_loots(ids=[loot.id])
+print(f'Removed loots: {removed_loots}\n')
+
+```
+
+Create loot:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> from libmsf.msf import Msf
+>>> from libmsf.rest import MsfRestApi
+>>> from typing import List
+>>>
+>>> msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+>>> msf_api_url: str = 'https://localhost:5443'
+>>> msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+>>>
+>>> workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+>>> host: Msf.Host = Msf.Host(address='192.168.1.1')
+>>> service: Msf.Service = Msf.Service(port=12345)
+>>>
+>>> loot: Msf.Loot = Msf.Loot()
+>>> loot.workspace = workspace.name
+>>> loot.host = host.address
+>>> loot.port = service.port
+>>> loot.ltype = 'unit.test.type'
+>>> loot.data = 'dGVzdA=='
+>>> loot.name = '/tmp/unit.test'
+>>> loot.info = 'Unit test file'
+>>> loot.content_type = 'text/plain'
+>>> loot.path = 'path.txt'
+>>>
+>>> loot.id = msf_rest_api.create_loot(loot=loot)
+>>> print(f'New loot: {loot}\n')
+New loot: Msf.Loot(id=61, workspace='test_workspace', workspace_id=-1, host='192.168.1.1', host_id=-1, port=12345, service_id=-1, created_at=None, updated_at=None, ltype='unit.test.type', path='path.txt', data='dGVzdA==', content_type='text/plain', name='/tmp/unit.test', info='Unit test file', module_run_id=None)
+```
+
+![Create loot](images/create_loot.png)
+
+</details>
+
+Get loots:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> new_loot: Msf.Loot = msf_rest_api.get_loot_by_id(workspace=workspace.name, loot_id=loot.id)
+>>> print(f'New loot by id: {new_loot}\n')
+New loot by id: Msf.Loot(id=61, workspace=None, workspace_id=215, host=Msf.Host(id=227, workspace=None, created_at='2021-04-16T13:55:53.310Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=215, updated_at='2021-04-16T13:55:53.310Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=227, port=-1, service_id=None, created_at='2021-04-16T13:56:16.838Z', updated_at='2021-04-16T13:56:16.838Z', ltype='unit.test.type', path='/Users/vladimir/.msf4/loot/6f8c35d43dc702b3b866-path.txt', data='dGVzdA==', content_type='text/plain', name='/tmp/unit.test', info='Unit test file', module_run_id=None)
+
+>>>
+>>> all_loots: List[Msf.Loot] = msf_rest_api.get_loots(workspace=workspace.name)
+>>> print(f'All loots: {all_loots}\n')
+All loots: [Msf.Loot(id=61, workspace=None, workspace_id=215, host=Msf.Host(id=227, workspace=None, created_at='2021-04-16T13:55:53.310Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=215, updated_at='2021-04-16T13:55:53.310Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=227, port=-1, service_id=None, created_at='2021-04-16T13:56:16.838Z', updated_at='2021-04-16T13:56:16.838Z', ltype='unit.test.type', path='/Users/vladimir/.msf4/loot/6f8c35d43dc702b3b866-path.txt', data='dGVzdA==', content_type='text/plain', name='/tmp/unit.test', info='Unit test file', module_run_id=None)]
+```
+
+</details>
+
+Delete loot:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> removed_loots: List[Msf.Loot] = msf_rest_api.delete_loots(ids=[loot.id])
+>>> print(f'Removed loots: {removed_loots}\n')
+Removed loots: [Msf.Loot(id=None, workspace=None, workspace_id=215, host=None, host_id=227, port=-1, service_id=None, created_at=None, updated_at=None, ltype='unit.test.type', path='/Users/vladimir/.msf4/loot/6f8c35d43dc702b3b866-path.txt', data='dGVzdA==', content_type='text/plain', name='/tmp/unit.test', info='Unit test file', module_run_id=None)]
+```
+
+![Delete loot](images/delete_loot.png)
+
+</details>
 
 ## Notes
 
