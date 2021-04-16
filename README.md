@@ -64,7 +64,7 @@ Msf.Workspace(id=197, name='test_workspace', created_at='2021-04-16T11:26:49.900
 
 libmsf can be installed with [pip](https://pip.pypa.io/en/stable/):
 ```shell
-pip3 install python-libmsf
+pip3 install libmsf
 ```
 
 Alternatively, you can grab the latest source code from [github](https://github.com/python-libmsf/python-libmsf.git):
