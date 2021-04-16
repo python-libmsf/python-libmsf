@@ -757,3 +757,169 @@ Removed notes: [Msf.Note(id=40, workspace=None, workspace_id=215, host=None, hos
 
 ## Credentials and logins
 
+```python
+from libmsf.msf import Msf
+from libmsf.rest import MsfRestApi
+from typing import List
+
+msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+msf_api_url: str = 'https://localhost:5443'
+msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+
+workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+workspace.id = msf_rest_api.get_workspace_id_by_name(workspace.name)
+host: Msf.Host = Msf.Host(address='192.168.1.1')
+service: Msf.Service = Msf.Service(port=12345, name='http', proto='tcp')
+
+cred: Msf.Cred = Msf.Cred()
+cred.workspace_id = workspace.id
+cred.address = host.address
+cred.port = service.port
+cred.username = 'UnitTestUser'
+cred.private_data = 'UnitTestPassword'
+cred.private_type = 'password'
+cred.module_fullname = 'auxiliary/scanner/http/http_login'
+cred.service_name = service.name
+cred.protocol = service.proto
+cred.origin_type = 'service'
+
+login: Msf.Login = Msf.Login()
+login.workspace_id = workspace.id
+login.address = host.address
+login.port = service.port
+login.last_attempted_at = '2021-01-01T11:11:11.111Z'
+login.service_name = service.name
+login.protocol = service.proto
+login.status = 'Successful'
+login.access_level = 'admin'
+
+cred.id = msf_rest_api.create_cred(cred=cred)
+print(f'New cred: {cred}\n')
+
+login.core_id = cred.id
+login.id = msf_rest_api.create_login(login=login)
+print(f'New login: {login}\n')
+
+new_login: Msf.Login = msf_rest_api.get_login_by_id(login_id=login.id)
+print(f'New login by id: {new_login}\n')
+
+new_cred: Msf.Cred = msf_rest_api.get_cred_by_id(workspace=workspace.name, cred_id=cred.id)
+print(f'New cred by id: {new_cred}\n')
+
+all_logins: List[Msf.Login] = msf_rest_api.get_logins()
+print(f'All logins: {all_logins}\n')
+
+all_creds: List[Msf.Cred] = msf_rest_api.get_creds(workspace=workspace.name)
+print(f'All creds: {all_creds}\n')
+
+removed_logins: List[Msf.Login] = msf_rest_api.delete_logins(ids=[login.id])
+print(f'Removed logins: {removed_logins}\n')
+
+removed_creds: List[Msf.Cred] = msf_rest_api.delete_creds(ids=[cred.id])
+print(f'Removed creds: {removed_creds}\n')
+
+```
+
+Create credentials and login:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> from libmsf.msf import Msf
+>>> from libmsf.rest import MsfRestApi
+>>> from typing import List
+>>>
+>>> msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+>>> msf_api_url: str = 'https://localhost:5443'
+>>> msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+>>>
+>>> workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+>>> workspace.id = msf_rest_api.get_workspace_id_by_name(workspace.name)
+>>> host: Msf.Host = Msf.Host(address='192.168.1.1')
+>>> service: Msf.Service = Msf.Service(port=12345, name='http', proto='tcp')
+>>>
+>>> cred: Msf.Cred = Msf.Cred()
+>>> cred.workspace_id = workspace.id
+>>> cred.address = host.address
+>>> cred.port = service.port
+>>> cred.username = 'UnitTestUser'
+>>> cred.private_data = 'UnitTestPassword'
+>>> cred.private_type = 'password'
+>>> cred.module_fullname = 'auxiliary/scanner/http/http_login'
+>>> cred.service_name = service.name
+>>> cred.protocol = service.proto
+>>> cred.origin_type = 'service'
+>>>
+>>> login: Msf.Login = Msf.Login()
+>>> login.workspace_id = workspace.id
+>>> login.address = host.address
+>>> login.port = service.port
+>>> login.last_attempted_at = '2021-01-01T11:11:11.111Z'
+>>> login.service_name = service.name
+>>> login.protocol = service.proto
+>>> login.status = 'Successful'
+>>> login.access_level = 'admin'
+>>>
+>>> cred.id = msf_rest_api.create_cred(cred=cred)
+>>> print(f'New cred: {cred}\n')
+New cred: Msf.Cred(id=68, workspace_id=215, username='UnitTestUser', private_data='UnitTestPassword', private_type='password', jtr_format=None, address='192.168.1.1', port=12345, service_name='http', protocol='tcp', origin_type='service', module_fullname='auxiliary/scanner/http/http_login', created_at=None, updated_at=None, origin_id=-1, private_id=-1, public_id=-1, realm_id=-1, logins_count=-1, logins=None, public=None, private=None, origin=None)
+
+>>>
+>>> login.core_id = cred.id
+>>> login.id = msf_rest_api.create_login(login=login)
+>>> print(f'New login: {login}\n')
+New login: Msf.Login(id=78, workspace_id=215, core_id=68, service_id=-1, last_attempted_at='2021-01-01T11:11:11.111Z', address='192.168.1.1', service_name='http', port=12345, protocol='tcp', status='Successful', access_level='admin', public=None, private=None, created_at=None, updated_at=None)
+```
+
+![Create cred](images/create_cred.png)
+
+</details>
+
+Get credentials and logins:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> new_login: Msf.Login = msf_rest_api.get_login_by_id(login_id=login.id)
+>>> print(f'New login by id: {new_login}\n')
+New login by id: Msf.Login(id=78, workspace_id=-1, core_id=68, service_id=252, last_attempted_at='2021-01-01T11:11:11.111Z', address=None, service_name='ssh', port=-1, protocol='tcp', status='Successful', access_level='admin', public=None, private=None, created_at='2021-04-16T14:16:05.151Z', updated_at='2021-04-16T14:16:05.151Z')
+
+>>>
+>>> new_cred: Msf.Cred = msf_rest_api.get_cred_by_id(workspace=workspace.name, cred_id=cred.id)
+>>> print(f'New cred by id: {new_cred}\n')
+New cred by id: Msf.Cred(id=68, workspace_id=215, username=None, private_data=None, private_type=None, jtr_format=None, address=None, port=-1, service_name=None, protocol=None, origin_type='Metasploit::Credential::Origin::Service', module_fullname=None, created_at='2021-04-16T14:15:36.173Z', updated_at='2021-04-16T14:15:36.173Z', origin_id=77, private_id=2, public_id=5, realm_id=None, logins_count=1, logins=[Msf.Login(id=78, workspace_id=-1, core_id=68, service_id=252, last_attempted_at='2021-01-01T11:11:11.111Z', address=None, service_name='ssh', port=-1, protocol='tcp', status='Successful', access_level='admin', public=None, private=None, created_at='2021-04-16T14:16:05.151Z', updated_at='2021-04-16T14:16:05.151Z')], public=Msf.Public(id=5, username='UnitTestUser', created_at='2021-04-15T22:57:21.572Z', updated_at='2021-04-15T22:57:21.572Z', type='Metasploit::Credential::Username'), private=Msf.Private(id=2, data='UnitTestPassword', created_at='2021-04-15T22:57:21.548Z', updated_at='2021-04-15T22:57:21.548Z', jtr_format=None, type='Metasploit::Credential::Password'), origin=Msf.Origin(id=77, service_id=252, module_full_name='auxiliary/scanner/http/http_login', created_at='2021-04-16T14:11:06.627Z', updated_at='2021-04-16T14:11:06.627Z', type='Metasploit::Credential::Origin::Service'))
+
+>>>
+>>> all_logins: List[Msf.Login] = msf_rest_api.get_logins()
+>>> print(f'All logins: {all_logins}\n')
+All logins: [Msf.Login(id=78, workspace_id=-1, core_id=68, service_id=252, last_attempted_at='2021-01-01T11:11:11.111Z', address=None, service_name='ssh', port=-1, protocol='tcp', status='Successful', access_level='admin', public=None, private=None, created_at='2021-04-16T14:16:05.151Z', updated_at='2021-04-16T14:16:05.151Z')]
+
+>>>
+>>> all_creds: List[Msf.Cred] = msf_rest_api.get_creds(workspace=workspace.name)
+>>> print(f'All creds: {all_creds}\n')
+All creds: [Msf.Cred(id=68, workspace_id=215, username=None, private_data=None, private_type=None, jtr_format=None, address=None, port=-1, service_name=None, protocol=None, origin_type='Metasploit::Credential::Origin::Service', module_fullname=None, created_at='2021-04-16T14:15:36.173Z', updated_at='2021-04-16T14:15:36.173Z', origin_id=77, private_id=2, public_id=5, realm_id=None, logins_count=1, logins=[Msf.Login(id=78, workspace_id=-1, core_id=68, service_id=252, last_attempted_at='2021-01-01T11:11:11.111Z', address=None, service_name='ssh', port=-1, protocol='tcp', status='Successful', access_level='admin', public=None, private=None, created_at='2021-04-16T14:16:05.151Z', updated_at='2021-04-16T14:16:05.151Z')], public=Msf.Public(id=5, username='UnitTestUser', created_at='2021-04-15T22:57:21.572Z', updated_at='2021-04-15T22:57:21.572Z', type='Metasploit::Credential::Username'), private=Msf.Private(id=2, data='UnitTestPassword', created_at='2021-04-15T22:57:21.548Z', updated_at='2021-04-15T22:57:21.548Z', jtr_format=None, type='Metasploit::Credential::Password'), origin=Msf.Origin(id=77, service_id=252, module_full_name='auxiliary/scanner/http/http_login', created_at='2021-04-16T14:11:06.627Z', updated_at='2021-04-16T14:11:06.627Z', type='Metasploit::Credential::Origin::Service'))]
+```
+
+</details>
+
+Delete credentials and login:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> removed_logins: List[Msf.Login] = msf_rest_api.delete_logins(ids=[login.id])
+>>> print(f'Removed logins: {removed_logins}\n')
+Removed logins: [Msf.Login(id=78, workspace_id=-1, core_id=68, service_id=252, last_attempted_at='2021-01-01T11:11:11.111Z', address=None, service_name='ssh', port=-1, protocol='tcp', status='Successful', access_level='admin', public=None, private=None, created_at='2021-04-16T14:16:05.151Z', updated_at='2021-04-16T14:16:05.151Z')]
+
+>>>
+>>> removed_creds: List[Msf.Cred] = msf_rest_api.delete_creds(ids=[cred.id])
+>>> print(f'Removed creds: {removed_creds}\n')
+Removed creds: [Msf.Cred(id=68, workspace_id=215, username=None, private_data=None, private_type=None, jtr_format=None, address=None, port=-1, service_name=None, protocol=None, origin_type='Metasploit::Credential::Origin::Service', module_fullname=None, created_at='2021-04-16T14:15:36.173Z', updated_at='2021-04-16T14:15:36.173Z', origin_id=77, private_id=2, public_id=5, realm_id=None, logins_count=0, logins=None, public=None, private=None, origin=None)]
+```
+
+![Delete cred](images/delete_cred.png)
+
+</details>
