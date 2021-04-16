@@ -123,7 +123,7 @@ Metasploit web service user API token stored in file: `~/.msf4/config`
 
 <details><summary>MSF webservice config:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 $ cat ~/.msf4/config
 [framework/database]
 default_db=local-https-data-service
@@ -197,7 +197,7 @@ Get workspaces:
   <summary>Example:</summary>
 
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> all_workspaces: List[Msf.Workspace] = msf_rest_api.get_workspaces()
 >>> print(f'All workspaces: {all_workspaces}\n')
 All workspaces: [Msf.Workspace(id=1, name='default', created_at='2021-02-16T16:47:41.137Z', updated_at='2021-02-16T16:47:41.137Z', boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False), Msf.Workspace(id=210, name='test_workspace', created_at='2021-04-16T13:28:17.841Z', updated_at='2021-04-16T13:28:17.841Z', boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False)]
@@ -211,7 +211,7 @@ Delete workspace:
   <summary>Example:</summary>
 
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> removed_workspace: Msf.Workspace = msf_rest_api.delete_workspace(workspace_name=workspace.name)
 >>> print(f'Removed workspace: {removed_workspace}\n')
 Removed workspace: Msf.Workspace(id=210, name='test_workspace', created_at='2021-04-16T13:28:17.841Z', updated_at='2021-04-16T13:28:17.841Z', boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False)
@@ -272,7 +272,7 @@ Create host:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> from libmsf.msf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
@@ -316,7 +316,7 @@ Get hosts:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> new_host: Msf.Host = msf_rest_api.get_host_by_id(workspace=workspace.name, host_id=host.id)
 >>> print(f'New host by id: {new_host}\n')
 New host by id: Msf.Host(id=220, workspace=None, created_at='2021-04-16T13:03:43.816Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=206, updated_at='2021-04-16T13:03:43.816Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=0, service_count=0, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix')
@@ -334,7 +334,7 @@ Delete host:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> removed_hosts: List[Msf.Host] = msf_rest_api.delete_hosts(ids=[host.id])
 >>> print(f'Removed hosts: {removed_hosts}\n')
 Removed hosts: [Msf.Host(id=220, workspace=None, created_at='2021-04-16T13:03:43.816Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=206, updated_at='2021-04-16T13:03:43.816Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=0, service_count=0, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix')]
@@ -386,7 +386,7 @@ Create service:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> from libmsf.msf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
@@ -421,7 +421,7 @@ Get services:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> new_service: Msf.Service = msf_rest_api.get_service_by_id(workspace=workspace.name, service_id=service.id)
 >>> print(f'New service by id: {new_service}\n')
 New service by id: Msf.Service(id=249, workspace=None, host=Msf.Host(id=224, workspace=None, created_at='2021-04-16T13:35:50.565Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=212, updated_at='2021-04-16T13:35:50.565Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=224, created_at='2021-04-16T13:36:13.731Z', port=12345, proto='tcp', state='open', name='http', updated_at='2021-04-16T13:36:13.731Z', info='Unit test')
@@ -439,7 +439,7 @@ Delete service:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> removed_services: List[Msf.Service] = msf_rest_api.delete_services(ids=[service.id])
 >>> print(f'Removed services: {removed_services}\n')
 Removed services: [Msf.Service(id=249, workspace=None, host=None, host_id=224, created_at='2021-04-16T13:36:13.731Z', port=12345, proto='tcp', state='open', name='http', updated_at='2021-04-16T13:36:13.731Z', info='Unit test')]
@@ -491,7 +491,7 @@ Create vulnerability:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> from libmsf.msf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
@@ -526,7 +526,7 @@ Get vulnerabilities:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> new_vuln: Msf.Vuln = msf_rest_api.get_vuln_by_id(workspace=workspace.name, vuln_id=vuln.id)
 >>> print(f'New vuln by id: {new_vuln}\n')
 New vuln by id: Msf.Vuln(id=272, workspace=None, host=Msf.Host(id=226, workspace=None, created_at='2021-04-16T13:46:17.284Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=214, updated_at='2021-04-16T13:46:17.284Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=1, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=226, port=-1, service_id=251, created_at='2021-04-16T13:47:50.763Z', name='Unit test vuln name', updated_at='2021-04-16T13:47:50.763Z', info='Unit test vuln info', exploited_at=None, vuln_detail_count=0, vuln_attempt_count=0, origin_id=None, origin_type=None, refs=[{'id': 8, 'ref_id': None, 'created_at': '2021-04-15T22:57:21.274Z', 'name': 'CVE-2020-2020', 'updated_at': '2021-04-15T22:57:21.274Z'}, {'id': 9, 'ref_id': None, 'created_at': '2021-04-15T22:57:21.279Z', 'name': 'URL-https://unit.test.com/vuln', 'updated_at': '2021-04-15T22:57:21.279Z'}], module_refs=[])
@@ -544,7 +544,7 @@ Delete vulnerability:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> removed_vulns: List[Msf.Vuln] = msf_rest_api.delete_vulns(ids=[vuln.id])
 >>> print(f'Removed vulns: {removed_vulns}\n')
 Removed vulns: [Msf.Vuln(id=272, workspace=None, host=Msf.Host(id=226, workspace=None, created_at='2021-04-16T13:46:17.284Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=214, updated_at='2021-04-16T13:46:17.284Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=226, port=-1, service_id=251, created_at='2021-04-16T13:47:50.763Z', name='Unit test vuln name', updated_at='2021-04-16T13:47:50.763Z', info='Unit test vuln info', exploited_at=None, vuln_detail_count=0, vuln_attempt_count=0, origin_id=None, origin_type=None, refs=[], module_refs=[])]
@@ -599,7 +599,7 @@ Create loot:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> from libmsf.msf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
@@ -637,7 +637,7 @@ Get loots:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> new_loot: Msf.Loot = msf_rest_api.get_loot_by_id(workspace=workspace.name, loot_id=loot.id)
 >>> print(f'New loot by id: {new_loot}\n')
 New loot by id: Msf.Loot(id=61, workspace=None, workspace_id=215, host=Msf.Host(id=227, workspace=None, created_at='2021-04-16T13:55:53.310Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=215, updated_at='2021-04-16T13:55:53.310Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=227, port=-1, service_id=None, created_at='2021-04-16T13:56:16.838Z', updated_at='2021-04-16T13:56:16.838Z', ltype='unit.test.type', path='/Users/vladimir/.msf4/loot/6f8c35d43dc702b3b866-path.txt', data='dGVzdA==', content_type='text/plain', name='/tmp/unit.test', info='Unit test file', module_run_id=None)
@@ -655,7 +655,7 @@ Delete loot:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> removed_loots: List[Msf.Loot] = msf_rest_api.delete_loots(ids=[loot.id])
 >>> print(f'Removed loots: {removed_loots}\n')
 Removed loots: [Msf.Loot(id=None, workspace=None, workspace_id=215, host=None, host_id=227, port=-1, service_id=None, created_at=None, updated_at=None, ltype='unit.test.type', path='/Users/vladimir/.msf4/loot/6f8c35d43dc702b3b866-path.txt', data='dGVzdA==', content_type='text/plain', name='/tmp/unit.test', info='Unit test file', module_run_id=None)]
@@ -705,7 +705,7 @@ Create note:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> from libmsf.msf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
@@ -738,7 +738,7 @@ Get notes:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> new_note: Msf.Note = msf_rest_api.get_note_by_id(workspace=workspace.name, note_id=note.id)
 >>> print(f'New note by id: {new_note}\n')
 New note by id: Msf.Note(id=40, workspace=None, workspace_id=215, host=Msf.Host(id=227, workspace=None, created_at='2021-04-16T13:55:53.310Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=215, updated_at='2021-04-16T13:55:53.310Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=1, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=227, service_id=None, created_at='2021-04-16T14:03:46.116Z', updated_at='2021-04-16T14:03:46.116Z', ntype='host.comments', data='Unit test host comment', critical=None, seen=None)
@@ -756,7 +756,7 @@ Delete note:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> removed_notes: List[Msf.Note] = msf_rest_api.delete_notes(ids=[note.id])
 >>> print(f'Removed notes: {removed_notes}\n')
 Removed notes: [Msf.Note(id=40, workspace=None, workspace_id=215, host=None, host_id=227, service_id=None, created_at='2021-04-16T14:03:46.116Z', updated_at='2021-04-16T14:03:46.116Z', ntype='host.comments', data='Unit test host comment', critical=None, seen=None)]
@@ -836,7 +836,7 @@ Create credentials and login:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> from libmsf.msf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
@@ -892,7 +892,7 @@ Get credentials and logins:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> new_login: Msf.Login = msf_rest_api.get_login_by_id(login_id=login.id)
 >>> print(f'New login by id: {new_login}\n')
 New login by id: Msf.Login(id=78, workspace_id=-1, core_id=68, service_id=252, last_attempted_at='2021-01-01T11:11:11.111Z', address=None, service_name='ssh', port=-1, protocol='tcp', status='Successful', access_level='admin', public=None, private=None, created_at='2021-04-16T14:16:05.151Z', updated_at='2021-04-16T14:16:05.151Z')
@@ -920,7 +920,7 @@ Delete credentials and login:
 <details>
   <summary>Example:</summary>
 
-<pre language="shell"><code>
+<pre lang="shell"><code>
 >>> removed_logins: List[Msf.Login] = msf_rest_api.delete_logins(ids=[login.id])
 >>> print(f'Removed logins: {removed_logins}\n')
 Removed logins: [Msf.Login(id=78, workspace_id=-1, core_id=68, service_id=252, last_attempted_at='2021-01-01T11:11:11.111Z', address=None, service_name='ssh', port=-1, protocol='tcp', status='Successful', access_level='admin', public=None, private=None, created_at='2021-04-16T14:16:05.151Z', updated_at='2021-04-16T14:16:05.151Z')]
