@@ -178,3 +178,52 @@ msf6 >
 </details>
 
 ![Create workspace](images/create_workspace.png)
+
+Delete workspace:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```python
+from libmsf.msf import Msf
+from libmsf.rest import MsfRestApi
+
+msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+msf_api_url: str = 'https://localhost:5443'
+msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+
+print('Create workspace:\n')
+workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+
+workspace.id = msf_rest_api.create_workspace(workspace=workspace)
+print(f'New workspace: {workspace}\n')
+```
+
+```shell
+>>> from libmsf.msf import Msf
+>>> from libmsf.rest import MsfRestApi
+>>>
+>>> msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+>>> msf_api_url: str = 'https://localhost:5443'
+>>> msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+>>>
+>>> print('Create workspace:\n')
+Create workspace:
+
+>>> workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+>>>
+>>> workspace.id = msf_rest_api.create_workspace(workspace=workspace)
+>>> print(f'New workspace: {workspace}\n')
+New workspace: Msf.Workspace(id=198, name='test_workspace', created_at=None, updated_at=None, boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False)
+
+```
+
+```shell
+msf6 > workspace
+  test_workspace
+* default
+msf6 >
+```
+
+</details>
+
