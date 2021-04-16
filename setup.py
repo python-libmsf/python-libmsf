@@ -14,7 +14,7 @@ __author__ = 'Vladimir Ivanov'
 __copyright__ = 'Copyright 2021, Python Metasploit Library'
 __credits__ = ['']
 __license__ = 'MIT'
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 __maintainer__ = 'Vladimir Ivanov'
 __email__ = 'ivanov.vladimir.mail@gmail.com'
 __status__ = 'Development'
@@ -37,7 +37,7 @@ setup(
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Education",
-        "License :: OSI Approved :: GNU Affero General Public License v3",
+        "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Operating System :: MacOS",
         "Operating System :: Microsoft :: Windows",
