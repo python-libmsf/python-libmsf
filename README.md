@@ -656,6 +656,104 @@ Removed loots: [Msf.Loot(id=None, workspace=None, workspace_id=215, host=None, h
 
 ## Notes
 
+```python
+from libmsf.msf import Msf
+from libmsf.rest import MsfRestApi
+from typing import List
+
+msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+msf_api_url: str = 'https://localhost:5443'
+msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+
+workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+host: Msf.Host = Msf.Host(address='192.168.1.1')
+service: Msf.Service = Msf.Service(port=12345)
+
+note: Msf.Note = Msf.Note()
+note.workspace = workspace.name
+note.host = host.address
+note.ntype = 'host.comments'
+note.data = 'Unit test host comment'
+
+note.id = msf_rest_api.create_note(note=note)
+print(f'New note: {note}\n')
+
+new_note: Msf.Note = msf_rest_api.get_note_by_id(workspace=workspace.name, note_id=note.id)
+print(f'New note by id: {new_note}\n')
+
+all_notes: List[Msf.Note] = msf_rest_api.get_notes(workspace=workspace.name)
+print(f'All notes: {all_notes}\n')
+
+removed_notes: List[Msf.Note] = msf_rest_api.delete_notes(ids=[note.id])
+print(f'Removed notes: {removed_notes}\n')
+
+```
+
+Create note:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> from libmsf.msf import Msf
+>>> from libmsf.rest import MsfRestApi
+>>> from typing import List
+>>>
+>>> msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+>>> msf_api_url: str = 'https://localhost:5443'
+>>> msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+>>>
+>>> workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+>>> host: Msf.Host = Msf.Host(address='192.168.1.1')
+>>> service: Msf.Service = Msf.Service(port=12345)
+>>>
+>>> note: Msf.Note = Msf.Note()
+>>> note.workspace = workspace.name
+>>> note.host = host.address
+>>> note.ntype = 'host.comments'
+>>> note.data = 'Unit test host comment'
+>>>
+>>> note.id = msf_rest_api.create_note(note=note)
+>>> print(f'New note: {note}\n')
+New note: Msf.Note(id=40, workspace='test_workspace', workspace_id=-1, host='192.168.1.1', host_id=-1, service_id=-1, created_at=None, updated_at=None, ntype='host.comments', data='Unit test host comment', critical=False, seen=False)
+```
+
+![Create note](images/create_note.png)
+
+</details>
+
+Get notes:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> new_note: Msf.Note = msf_rest_api.get_note_by_id(workspace=workspace.name, note_id=note.id)
+>>> print(f'New note by id: {new_note}\n')
+New note by id: Msf.Note(id=40, workspace=None, workspace_id=215, host=Msf.Host(id=227, workspace=None, created_at='2021-04-16T13:55:53.310Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=215, updated_at='2021-04-16T13:55:53.310Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=1, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=227, service_id=None, created_at='2021-04-16T14:03:46.116Z', updated_at='2021-04-16T14:03:46.116Z', ntype='host.comments', data='Unit test host comment', critical=None, seen=None)
+
+>>>
+>>> all_notes: List[Msf.Note] = msf_rest_api.get_notes(workspace=workspace.name)
+>>> print(f'All notes: {all_notes}\n')
+All notes: [Msf.Note(id=40, workspace=None, workspace_id=215, host=Msf.Host(id=227, workspace=None, created_at='2021-04-16T13:55:53.310Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=215, updated_at='2021-04-16T13:55:53.310Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=1, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=227, service_id=None, created_at='2021-04-16T14:03:46.116Z', updated_at='2021-04-16T14:03:46.116Z', ntype='host.comments', data='Unit test host comment', critical=None, seen=None)]
+```
+
+</details>
+
+Delete note:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> removed_notes: List[Msf.Note] = msf_rest_api.delete_notes(ids=[note.id])
+>>> print(f'Removed notes: {removed_notes}\n')
+Removed notes: [Msf.Note(id=40, workspace=None, workspace_id=215, host=None, host_id=227, service_id=None, created_at='2021-04-16T14:03:46.116Z', updated_at='2021-04-16T14:03:46.116Z', ntype='host.comments', data='Unit test host comment', critical=None, seen=None)]
+```
+
+![Delete note](images/delete_note.png)
+
+</details>
 
 ## Credentials and logins
 
