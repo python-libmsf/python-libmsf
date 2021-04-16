@@ -440,6 +440,108 @@ Removed services: [Msf.Service(id=249, workspace=None, host=None, host_id=224, c
 
 ## Vulnerabilities
 
+```python
+from libmsf.msf import Msf
+from libmsf.rest import MsfRestApi
+from typing import List
+
+msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+msf_api_url: str = 'https://localhost:5443'
+msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+
+workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+host: Msf.Host = Msf.Host(address='192.168.1.1')
+service: Msf.Service = Msf.Service(port=12345)
+
+vuln: Msf.Vuln = Msf.Vuln()
+vuln.workspace = workspace.name
+vuln.host = host.address
+vuln.port = service.port
+vuln.name = 'Unit test vuln name'
+vuln.info = 'Unit test vuln info'
+vuln.refs = ['CVE-2020-2020', 'URL-https://unit.test.com/vuln']
+
+vuln.id = msf_rest_api.create_vuln(vuln=vuln)
+print(f'New vuln: {vuln}\n')
+
+new_vuln: Msf.Vuln = msf_rest_api.get_vuln_by_id(workspace=workspace.name, vuln_id=vuln.id)
+print(f'New vuln by id: {new_vuln}\n')
+
+all_vulns: List[Msf.Vuln] = msf_rest_api.get_vulns(workspace=workspace.name)
+print(f'All vulns: {all_vulns}\n')
+
+removed_vulns: List[Msf.Vuln] = msf_rest_api.delete_vulns(ids=[vuln.id])
+print(f'Removed vulns: {removed_vulns}\n')
+
+```
+
+Create vulnerability:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> from libmsf.msf import Msf
+>>> from libmsf.rest import MsfRestApi
+>>> from typing import List
+>>>
+>>> msf_api_key: str = 'cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460'
+>>> msf_api_url: str = 'https://localhost:5443'
+>>> msf_rest_api: MsfRestApi = MsfRestApi(api_key=msf_api_key, api_url=msf_api_url)
+>>>
+>>> workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
+>>> host: Msf.Host = Msf.Host(address='192.168.1.1')
+>>> service: Msf.Service = Msf.Service(port=12345)
+>>>
+>>> vuln: Msf.Vuln = Msf.Vuln()
+>>> vuln.workspace = workspace.name
+>>> vuln.host = host.address
+>>> vuln.port = service.port
+>>> vuln.name = 'Unit test vuln name'
+>>> vuln.info = 'Unit test vuln info'
+>>> vuln.refs = ['CVE-2020-2020', 'URL-https://unit.test.com/vuln']
+>>>
+>>> vuln.id = msf_rest_api.create_vuln(vuln=vuln)
+>>> print(f'New vuln: {vuln}\n')
+New vuln: Msf.Vuln(id=272, workspace='test_workspace', host='192.168.1.1', host_id=-1, port=12345, service_id=-1, created_at=None, name='Unit test vuln name', updated_at=None, info='Unit test vuln info', exploited_at=None, vuln_detail_count=0, vuln_attempt_count=0, origin_id=None, origin_type=None, refs=['CVE-2020-2020', 'URL-https://unit.test.com/vuln'], module_refs=None)
+```
+
+![Create vuln](images/create_vuln.png)
+
+</details>
+
+Get vulnerabilities:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> new_vuln: Msf.Vuln = msf_rest_api.get_vuln_by_id(workspace=workspace.name, vuln_id=vuln.id)
+>>> print(f'New vuln by id: {new_vuln}\n')
+New vuln by id: Msf.Vuln(id=272, workspace=None, host=Msf.Host(id=226, workspace=None, created_at='2021-04-16T13:46:17.284Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=214, updated_at='2021-04-16T13:46:17.284Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=1, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=226, port=-1, service_id=251, created_at='2021-04-16T13:47:50.763Z', name='Unit test vuln name', updated_at='2021-04-16T13:47:50.763Z', info='Unit test vuln info', exploited_at=None, vuln_detail_count=0, vuln_attempt_count=0, origin_id=None, origin_type=None, refs=[{'id': 8, 'ref_id': None, 'created_at': '2021-04-15T22:57:21.274Z', 'name': 'CVE-2020-2020', 'updated_at': '2021-04-15T22:57:21.274Z'}, {'id': 9, 'ref_id': None, 'created_at': '2021-04-15T22:57:21.279Z', 'name': 'URL-https://unit.test.com/vuln', 'updated_at': '2021-04-15T22:57:21.279Z'}], module_refs=[])
+
+>>>
+>>> all_vulns: List[Msf.Vuln] = msf_rest_api.get_vulns(workspace=workspace.name)
+>>> print(f'All vulns: {all_vulns}\n')
+All vulns: [Msf.Vuln(id=272, workspace=None, host=Msf.Host(id=226, workspace=None, created_at='2021-04-16T13:46:17.284Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=214, updated_at='2021-04-16T13:46:17.284Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=1, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=226, port=-1, service_id=251, created_at='2021-04-16T13:47:50.763Z', name='Unit test vuln name', updated_at='2021-04-16T13:47:50.763Z', info='Unit test vuln info', exploited_at=None, vuln_detail_count=0, vuln_attempt_count=0, origin_id=None, origin_type=None, refs=[{'id': 8, 'ref_id': None, 'created_at': '2021-04-15T22:57:21.274Z', 'name': 'CVE-2020-2020', 'updated_at': '2021-04-15T22:57:21.274Z'}, {'id': 9, 'ref_id': None, 'created_at': '2021-04-15T22:57:21.279Z', 'name': 'URL-https://unit.test.com/vuln', 'updated_at': '2021-04-15T22:57:21.279Z'}], module_refs=[])]
+```
+
+</details>
+
+Delete vulnerability:
+
+<details>
+  <summary markdown="span">Example:</summary>
+
+```shell
+>>> removed_vulns: List[Msf.Vuln] = msf_rest_api.delete_vulns(ids=[vuln.id])
+>>> print(f'Removed vulns: {removed_vulns}\n')
+Removed vulns: [Msf.Vuln(id=272, workspace=None, host=Msf.Host(id=226, workspace=None, created_at='2021-04-16T13:46:17.284Z', host=None, address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=214, updated_at='2021-04-16T13:46:17.284Z', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=0, vuln_count=0, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), host_id=226, port=-1, service_id=251, created_at='2021-04-16T13:47:50.763Z', name='Unit test vuln name', updated_at='2021-04-16T13:47:50.763Z', info='Unit test vuln info', exploited_at=None, vuln_detail_count=0, vuln_attempt_count=0, origin_id=None, origin_type=None, refs=[], module_refs=[])]
+```
+
+![Delete vuln](images/delete_vuln.png)
+
+</details>
 
 ## Loots
 
