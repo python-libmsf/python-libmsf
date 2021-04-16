@@ -31,7 +31,7 @@ setup(
     description="Python Metasploit Library",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/python-libmsf/python-libmsf",
+    url="https://python-libmsf.github.io/",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
