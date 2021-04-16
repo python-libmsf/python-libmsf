@@ -15,23 +15,24 @@ print(f'New workspace: {workspace}\n')
 
 # Hosts methods
 print('Hosts methods:\n')
-host: Msf.Host = Msf.Host(workspace=workspace.name,
-                          address='192.168.1.1',
-                          mac='00:11:22:33:44:55',
-                          name='unit.test.com',
-                          os_name='linux',
-                          os_family='posix',
-                          os_flavor='test',
-                          os_sp='test',
-                          os_lang='English',
-                          purpose='device',
-                          info='Host for unit tests',
-                          comments='Host for unit tests',
-                          scope='unit tests scope',
-                          virtual_host='unittest',
-                          arch='x86',
-                          state='alive',
-                          comm='unittest')
+host: Msf.Host = Msf.Host()
+host.workspace = workspace.name
+host.address = '192.168.1.1'
+host.mac = '00:11:22:33:44:55'
+host.name = 'unit.test.com'
+host.os_name = 'linux'
+host.os_family = 'posix'
+host.os_flavor = 'test'
+host.os_sp = 'test'
+host.os_lang = 'English'
+host.purpose = 'device'
+host.info = 'Host for unit tests'
+host.comments = 'Host for unit tests'
+host.scope = 'unit tests scope'
+host.virtual_host = 'unittest'
+host.arch = 'x86'
+host.state = 'alive'
+host.comm = 'unittest'
 
 host.id = msf_rest_api.create_host(host=host)
 print(f'New host: {host}\n')
@@ -47,13 +48,14 @@ print(f'Removed hosts: {removed_hosts}\n')
 
 # Services methods
 print('Services methods:\n')
-service: Msf.Service = Msf.Service(workspace=workspace.name,
-                                   host=host.address,
-                                   port=12345,
-                                   proto='tcp',
-                                   state='open',
-                                   name='http',
-                                   info='Unit test')
+service: Msf.Service = Msf.Service()
+service.workspace = workspace.name
+service.host = host.address
+service.port = 12345
+service.proto = 'tcp'
+service.state = 'open'
+service.name = 'http'
+service.info = 'Unit test'
 
 service.id = msf_rest_api.create_service(service=service)
 print(f'New service: {service}\n')
@@ -69,12 +71,13 @@ print(f'Removed services: {removed_services}\n')
 
 # Vulns methods
 print('Vulns methods:\n')
-vuln: Msf.Vuln = Msf.Vuln(workspace=workspace.name,
-                          host=host.address,
-                          port=service.port,
-                          name='Unit test vuln name',
-                          info='Unit test vuln info',
-                          refs=['CVE-2020-2020', 'URL-https://unit.test.com/vuln'])
+vuln: Msf.Vuln = Msf.Vuln()
+vuln.workspace = workspace.name
+vuln.host = host.address
+vuln.port = service.port
+vuln.name = 'Unit test vuln name'
+vuln.info = 'Unit test vuln info'
+vuln.refs = ['CVE-2020-2020', 'URL-https://unit.test.com/vuln']
 
 vuln.id = msf_rest_api.create_vuln(vuln=vuln)
 print(f'New vuln: {vuln}\n')
@@ -90,15 +93,16 @@ print(f'Removed vulns: {removed_vulns}\n')
 
 # Loots methods
 print('Loots methods:\n')
-loot: Msf.Loot = Msf.Loot(workspace=workspace.name,
-                          host=host.address,
-                          port=service.port,
-                          ltype='unit.test.type',
-                          data='dGVzdA==',
-                          name='/tmp/unit.test',
-                          info='Unit test file',
-                          content_type='text/plain',
-                          path='path.txt')
+loot: Msf.Loot = Msf.Loot()
+loot.workspace = workspace.name
+loot.host = host.address
+loot.port = service.port
+loot.ltype = 'unit.test.type'
+loot.data = 'dGVzdA=='
+loot.name = '/tmp/unit.test'
+loot.info = 'Unit test file'
+loot.content_type = 'text/plain'
+loot.path = 'path.txt'
 
 loot.id = msf_rest_api.create_loot(loot=loot)
 print(f'New loot: {loot}\n')
@@ -114,10 +118,11 @@ print(f'Removed loots: {removed_loots}\n')
 
 # Notes methods
 print('Notes methods:\n')
-note: Msf.Note = Msf.Note(workspace=workspace.name,
-                          host=host.address,
-                          ntype='host.comments',
-                          data='Unit test host comment')
+note: Msf.Note = Msf.Note()
+note.workspace = workspace.name
+note.host = host.address
+note.ntype = 'host.comments'
+note.data = 'Unit test host comment'
 
 note.id = msf_rest_api.create_note(note=note)
 print(f'New note: {note}\n')
@@ -134,29 +139,31 @@ print(f'Removed notes: {removed_notes}\n')
 # Creds and Logins methods
 print('Creds and Logins methods:\n')
 
-cred: Msf.Cred = Msf.Cred(workspace_id=workspace.id,
-                          address=host.address,
-                          port=service.port,
-                          username='UnitTestUser',
-                          private_data='UnitTestPassword',
-                          private_type='password',
-                          module_fullname='auxiliary/scanner/http/http_login',
-                          service_name=service.name,
-                          protocol=service.proto,
-                          origin_type='service')
+cred: Msf.Cred = Msf.Cred()
+cred.workspace_id = workspace.id
+cred.address = host.address
+cred.port = service.port
+cred.username = 'UnitTestUser'
+cred.private_data = 'UnitTestPassword'
+cred.private_type = 'password'
+cred.module_fullname = 'auxiliary/scanner/http/http_login'
+cred.service_name = service.name
+cred.protocol = service.proto
+cred.origin_type = 'service'
 
 cred.id = msf_rest_api.create_cred(cred=cred)
 print(f'New cred: {cred}\n')
 
-login: Msf.Login = Msf.Login(workspace_id=workspace.id,
-                             address=host.address,
-                             port=service.port,
-                             core_id=cred.id,
-                             last_attempted_at='2021-01-01T11:11:11.111Z',
-                             service_name=service.name,
-                             protocol=service.proto,
-                             status='Successful',
-                             access_level='admin')
+login: Msf.Login = Msf.Login()
+login.workspace_id = workspace.id
+login.address = host.address
+login.port = service.port
+login.core_id = cred.id
+login.last_attempted_at = '2021-01-01T11:11:11.111Z'
+login.service_name = service.name
+login.protocol = service.proto
+login.status = 'Successful'
+login.access_level = 'admin'
 
 login.id = msf_rest_api.create_login(login=login)
 print(f'New login: {login}\n')
@@ -192,4 +199,3 @@ print(f'All workspaces: {all_workspaces}\n')
 
 removed_workspace: Msf.Workspace = msf_rest_api.delete_workspace(workspace_name=workspace.name)
 print(f'Removed workspace: {removed_workspace}\n')
-
