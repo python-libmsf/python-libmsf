@@ -1,0 +1,18 @@
+# Metasploit PWDump Export 2.0
+# Generated: 2021-04-18 16:35:17 UTC
+# Project: unit_test_workspace
+#
+#########################################################
+
+
+
+
+
+
+#  Plaintext Passwords (1 passwords, 1 services)
+  
+# 192.168.1.1:12345/tcp (http)
+UnitTestUser UnitTestPassword
+  
+
+
