@@ -8,8 +8,9 @@ Copyright 2021, Python Metasploit Library
 
 # Import
 from unittest import TestCase
-from tests.test_variables import MsfVariablesForTest
-from libmsf.rest import MsfRestApi, Msf
+from test_variables import MsfVariablesForTest
+from libmsf.rest import MsfRestApi
+from libmsf.msf import Msf
 from typing import Union, List, Dict
 
 # Authorship information

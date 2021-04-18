@@ -14,7 +14,6 @@ from dataclasses import dataclass
 from urllib3 import disable_warnings
 from urllib3.exceptions import InsecureRequestWarning
 from argparse import ArgumentParser
-from json import dumps
 
 # Authorship information
 __author__ = 'Vladimir Ivanov'
@@ -684,6 +683,12 @@ class MsfRestApi:
                 dictionary['port'] = None
             if dataclass_object.path is None:
                 dictionary['path'] = 'path'
+
+        if isinstance(dataclass_object, Msf.Note):
+            if dataclass_object.port == -1:
+                dictionary['port'] = None
+            if dataclass_object.vuln_id == -1:
+                dictionary['vuln_id'] = None
 
         if isinstance(dataclass_object, Msf.Cred):
             if dataclass_object.origin_type is None:

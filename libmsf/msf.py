@@ -129,6 +129,8 @@ class Msf:
         host: Union[None, str, 'Msf.Host'] = None
         host_id: int = -1
         service_id: int = -1
+        vuln_id: int = -1
+        port: int = -1
         created_at: Optional[str] = None
         updated_at: Optional[str] = None
         ntype: Optional[str] = None
