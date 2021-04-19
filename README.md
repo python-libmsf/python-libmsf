@@ -20,9 +20,9 @@ python-libmsf
 
 ## Description
 
-libmsf is a python library for working with Metasploit web service.
+libmsf is a python library for working with Metasploit web service and parse Metasploit exported files.
 
-With libmsf you can work with Metasploit objects such as:
+With MsfRestApi you can work with Metasploit REST API objects such as:
 
  - [Workspaces](#workspaces)
  - [Hosts](#hosts)
@@ -33,7 +33,7 @@ With libmsf you can work with Metasploit objects such as:
  - [Credentials](#credentials-and-logins)
  - [Logins](#credentials-and-logins)
 
-libmsf easy to use:
+MsfRestApi easy to use:
 
 ```shell
 >>> from libmsf.msf import Msf
@@ -45,6 +45,28 @@ Msf.Workspace(id=-1, name='test_workspace', created_at=None, updated_at=None, bo
 >>> workspace.id = msf_rest_api.create_workspace(workspace)
 >>> msf_rest_api.get_workspace_by_id(workspace.id)
 Msf.Workspace(id=197, name='test_workspace', created_at='2021-04-16T11:26:49.900Z', updated_at='2021-04-16T11:26:49.900Z', boundary=None, description=None, owner_id=None, limit_to_network=False, import_fingerprint=False)
+```
+
+With MsfParser you can parse Metasploit exported files
+
+MsfParser easy to use:
+
+```shell
+>>> from libmsf.msf import MsfData
+>>> from libmsf.parser import MsfParser
+>>>
+>>> msf_parser: MsfParser = MsfParser()
+>>> msf_data: MsfData = msf_parser.parse_file(file_name='tests/msf_db_export.xml')
+>>> msf_data.workspace
+'unit_test_workspace'
+>>> msf_data.hosts
+[Msf.Host(id=246, workspace='unit_test_workspace', created_at='2021-04-17 14:12:22 UTC', host='None', address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=241, updated_at='2021-04-17 14:12:22 UTC', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=1, vuln_count=1, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), Msf.Host(id=247, workspace='unit_test_workspace', created_at='2021-04-17 14:12:22 UTC', host='None', address='192.168.1.2', mac='00:11:22:33:44:56', comm='unittest2', name='unit.test2.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=241, updated_at='2021-04-17 14:12:22 UTC', purpose='device', info='Host for unit tests 2', comments='Host for unit tests 2', scope='unit tests scope', virtual_host='unittest', note_count=1, vuln_count=1, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix')]
+>>> msf_data.services
+[Msf.Service(id=271, workspace='unit_test_workspace', host='192.168.1.1', host_id=246, created_at='2021-04-17 14:12:22 UTC', port=12345, proto='tcp', state='open', name='http', updated_at='2021-04-17 14:12:22 UTC', info='Unit test'), Msf.Service(id=272, workspace='unit_test_workspace', host='192.168.1.2', host_id=247, created_at='2021-04-17 14:12:22 UTC', port=12346, proto='tcp', state='open', name='http', updated_at='2021-04-17 14:12:22 UTC', info='Unit test 2')]
+>>> msf_data.vulns
+[Msf.Vuln(id=285, workspace='unit_test_workspace', host='192.168.1.1', host_id=246, port=12345, service_id=271, created_at='2021-04-17 14:12:22 UTC', name='Unit test vuln name', updated_at='2021-04-17 14:12:22 UTC', info='Unit test vuln info', exploited_at='', vuln_detail_count=0, vuln_attempt_count=0, origin_id='', origin_type='', refs=['CVE-2020-2020', 'URL-https://unit.test.com/vuln'], module_refs='None'), Msf.Vuln(id=286, workspace='unit_test_workspace', host='192.168.1.2', host_id=247, port=12346, service_id=272, created_at='2021-04-17 14:12:22 UTC', name='Unit test vuln name 2', updated_at='2021-04-17 14:12:22 UTC', info='Unit test vuln info 2', exploited_at='', vuln_detail_count=0, vuln_attempt_count=0, origin_id='', origin_type='', refs=['CVE-2020-2021', 'URL-https://unit.test.com/vuln2'], module_refs='None')]
+>>> msf_data.notes
+[Msf.Note(id=53, workspace='unit_test_workspace', workspace_id=241, host='192.168.1.1', host_id=246, service_id=-1, vuln_id=-1, port=-1, created_at='2021-04-17 14:12:22 UTC', updated_at='2021-04-17 14:12:22 UTC', ntype='host.comments', data='Unit test host comment', critical=False, seen=False), Msf.Note(id=54, workspace='unit_test_workspace', workspace_id=241, host='192.168.1.2', host_id=247, service_id=-1, vuln_id=-1, port=-1, created_at='2021-04-17 14:12:22 UTC', updated_at='2021-04-17 14:12:22 UTC', ntype='host.comments', data='Unit test host comment 2', critical=False, seen=False)]
 ```
 
 ## Python versions
@@ -142,7 +164,9 @@ api_token=cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3
 
 Metasploit web service swagger page: `https://localhost:5443/api/v1/api-docs`
 
-## Workspaces
+## MsfRestApi
+
+### Workspaces
 
 ```python
 from libmsf.msf import Msf
@@ -224,7 +248,7 @@ Removed workspace: Msf.Workspace(id=210, name='test_workspace', created_at='2021
 
 </details>
 
-## Hosts
+### Hosts
 
 ```python
 from libmsf.msf import Msf
@@ -347,7 +371,7 @@ Removed hosts: [Msf.Host(id=220, workspace=None, created_at='2021-04-16T13:03:43
 
 </details>
 
-## Services
+### Services
 
 ```python
 from libmsf.msf import Msf
@@ -452,7 +476,7 @@ Removed services: [Msf.Service(id=249, workspace=None, host=None, host_id=224, c
 
 </details>
 
-## Vulnerabilities
+### Vulnerabilities
 
 ```python
 from libmsf.msf import Msf
@@ -557,7 +581,7 @@ Removed vulns: [Msf.Vuln(id=272, workspace=None, host=Msf.Host(id=226, workspace
 
 </details>
 
-## Loots
+### Loots
 
 ```python
 from libmsf.msf import Msf
@@ -668,7 +692,7 @@ Removed loots: [Msf.Loot(id=None, workspace=None, workspace_id=215, host=None, h
 
 </details>
 
-## Notes
+### Notes
 
 ```python
 from libmsf.msf import Msf
@@ -769,7 +793,7 @@ Removed notes: [Msf.Note(id=40, workspace=None, workspace_id=215, host=None, hos
 
 </details>
 
-## Credentials and logins
+### Credentials and logins
 
 ```python
 from libmsf.msf import Msf
@@ -937,3 +961,32 @@ Removed creds: [Msf.Cred(id=68, workspace_id=215, username=None, private_data=No
 <img src="https://python-libmsf.github.io/images/delete_cred.png" alt="Delete cred">
 
 </details>
+
+
+## MsfParser
+
+Code example:
+
+```python
+from libmsf.msf import MsfData
+from libmsf.parser import MsfParser
+
+msf_parser: MsfParser = MsfParser()
+msf_data: MsfData = msf_parser.parse_file(file_name='tests/msf_db_export.xml')
+
+print(f'Workspace: {msf_data.workspace}')
+print(f'Hosts: {msf_data.hosts}')
+print(f'Services: {msf_data.services}')
+print(f'Vulnerabilities: {msf_data.vulns}')
+print(f'Notes: {msf_data.notes}')
+```
+
+Result example:
+
+```shell
+Workspace: unit_test_workspace
+Hosts: [Msf.Host(id=246, workspace='unit_test_workspace', created_at='2021-04-17 14:12:22 UTC', host='None', address='192.168.1.1', mac='00:11:22:33:44:55', comm='unittest', name='unit.test.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=241, updated_at='2021-04-17 14:12:22 UTC', purpose='device', info='Host for unit tests', comments='Host for unit tests', scope='unit tests scope', virtual_host='unittest', note_count=1, vuln_count=1, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix'), Msf.Host(id=247, workspace='unit_test_workspace', created_at='2021-04-17 14:12:22 UTC', host='None', address='192.168.1.2', mac='00:11:22:33:44:56', comm='unittest2', name='unit.test2.com', state='alive', os_name='linux', os_flavor='test', os_sp='test', os_lang='English', arch='x86', workspace_id=241, updated_at='2021-04-17 14:12:22 UTC', purpose='device', info='Host for unit tests 2', comments='Host for unit tests 2', scope='unit tests scope', virtual_host='unittest', note_count=1, vuln_count=1, service_count=1, host_detail_count=0, exploit_attempt_count=0, cred_count=0, detected_arch='', os_family='posix')]
+Services: [Msf.Service(id=271, workspace='unit_test_workspace', host='192.168.1.1', host_id=246, created_at='2021-04-17 14:12:22 UTC', port=12345, proto='tcp', state='open', name='http', updated_at='2021-04-17 14:12:22 UTC', info='Unit test'), Msf.Service(id=272, workspace='unit_test_workspace', host='192.168.1.2', host_id=247, created_at='2021-04-17 14:12:22 UTC', port=12346, proto='tcp', state='open', name='http', updated_at='2021-04-17 14:12:22 UTC', info='Unit test 2')]
+Vulnerabilities: [Msf.Vuln(id=285, workspace='unit_test_workspace', host='192.168.1.1', host_id=246, port=12345, service_id=271, created_at='2021-04-17 14:12:22 UTC', name='Unit test vuln name', updated_at='2021-04-17 14:12:22 UTC', info='Unit test vuln info', exploited_at='', vuln_detail_count=0, vuln_attempt_count=0, origin_id='', origin_type='', refs=['CVE-2020-2020', 'URL-https://unit.test.com/vuln'], module_refs='None'), Msf.Vuln(id=286, workspace='unit_test_workspace', host='192.168.1.2', host_id=247, port=12346, service_id=272, created_at='2021-04-17 14:12:22 UTC', name='Unit test vuln name 2', updated_at='2021-04-17 14:12:22 UTC', info='Unit test vuln info 2', exploited_at='', vuln_detail_count=0, vuln_attempt_count=0, origin_id='', origin_type='', refs=['CVE-2020-2021', 'URL-https://unit.test.com/vuln2'], module_refs='None')]
+Notes: [Msf.Note(id=53, workspace='unit_test_workspace', workspace_id=241, host='192.168.1.1', host_id=246, service_id=-1, vuln_id=-1, port=-1, created_at='2021-04-17 14:12:22 UTC', updated_at='2021-04-17 14:12:22 UTC', ntype='host.comments', data='Unit test host comment', critical=False, seen=False), Msf.Note(id=54, workspace='unit_test_workspace', workspace_id=241, host='192.168.1.2', host_id=247, service_id=-1, vuln_id=-1, port=-1, created_at='2021-04-17 14:12:22 UTC', updated_at='2021-04-17 14:12:22 UTC', ntype='host.comments', data='Unit test host comment 2', critical=False, seen=False)]
+```
