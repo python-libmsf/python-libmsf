@@ -92,10 +92,10 @@
   <host>
     <id>247</id>
     <created-at>2021-04-17 14:12:22 UTC</created-at>
-    <address>192.168.1.1</address>
-    <mac>00:11:22:33:44:55</mac>
-    <comm>unittest</comm>
-    <name>unit.test.com</name>
+    <address>192.168.1.2</address>
+    <mac>00:11:22:33:44:56</mac>
+    <comm>unittest2</comm>
+    <name>unit.test2.com</name>
     <state>alive</state>
     <os-name>linux</os-name>
     <os-flavor>test</os-flavor>
@@ -105,8 +105,8 @@
     <workspace-id>241</workspace-id>
     <updated-at>2021-04-17 14:12:22 UTC</updated-at>
     <purpose>device</purpose>
-    <info>Host for unit tests</info>
-    <comments>Host for unit tests</comments>
+    <info>Host for unit tests 2</info>
+    <comments>Host for unit tests 2</comments>
     <scope>unit tests scope</scope>
     <virtual-host>unittest</virtual-host>
     <note-count>1</note-count>
@@ -126,12 +126,12 @@
       <id>272</id>
       <host-id>247</host-id>
       <created-at>2021-04-17 14:12:22 UTC</created-at>
-      <port>12345</port>
+      <port>12346</port>
       <proto>tcp</proto>
       <state>open</state>
       <name>http</name>
       <updated-at>2021-04-17 14:12:22 UTC</updated-at>
-      <info>Unit test</info>
+      <info>Unit test 2</info>
       </service>
     </services>
     <notes>
@@ -145,7 +145,7 @@
       <updated-at>2021-04-17 14:12:22 UTC</updated-at>
       <critical/>
       <seen/>
-      <data>Unit test host comment</data>
+      <data>Unit test host comment 2</data>
       <vuln-id/>
       </note>
     </notes>
@@ -155,9 +155,9 @@
       <host-id>247</host-id>
       <service-id>272</service-id>
       <created-at>2021-04-17 14:12:22 UTC</created-at>
-      <name>Unit test vuln name</name>
+      <name>Unit test vuln name 2</name>
       <updated-at>2021-04-17 14:12:22 UTC</updated-at>
-      <info>Unit test vuln info</info>
+      <info>Unit test vuln info 2</info>
       <exploited-at/>
       <vuln-detail-count>0</vuln-detail-count>
       <vuln-attempt-count>0</vuln-attempt-count>
@@ -166,8 +166,8 @@
         <notes>
         </notes>
         <refs>
-          <ref>CVE-2020-2020</ref>
-          <ref>URL-https://unit.test.com/vuln</ref>
+          <ref>CVE-2020-2021</ref>
+          <ref>URL-https://unit.test.com/vuln2</ref>
         </refs>
             <vuln_details>
             </vuln_details>
@@ -195,12 +195,12 @@
       <id>272</id>
       <host-id>247</host-id>
       <created-at>2021-04-17 14:12:22 UTC</created-at>
-      <port>12345</port>
+      <port>12346</port>
       <proto>tcp</proto>
       <state>open</state>
       <name>http</name>
       <updated-at>2021-04-17 14:12:22 UTC</updated-at>
-      <info>Unit test</info>
+      <info>Unit test 2</info>
   </service>
 
 </services>

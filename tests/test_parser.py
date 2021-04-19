@@ -58,6 +58,7 @@ class MsfParserApiTest(TestCase):
             self.assertEqual(host.comments, msf_variables.host.comments)
             self.assertEqual(host.scope, msf_variables.host.scope)
             self.assertEqual(host.virtual_host, msf_variables.host.virtual_host)
+            break
 
     # Get services
     def test03_get_services(self):
@@ -72,6 +73,7 @@ class MsfParserApiTest(TestCase):
             self.assertEqual(service.name, msf_variables.service.name)
             self.assertEqual(service.info, msf_variables.service.info)
             self.assertEqual(service.host, msf_variables.host.address)
+            break
 
     # Get vulns
     def test04_get_vulns(self):
@@ -85,6 +87,7 @@ class MsfParserApiTest(TestCase):
             self.assertEqual(vuln.refs[0], msf_variables.vuln.refs[0])
             self.assertEqual(vuln.refs[1], msf_variables.vuln.refs[1])
             self.assertEqual(vuln.host, msf_variables.host.address)
+            break
 
     # Get loots
     def test05_get_loots(self):
@@ -101,6 +104,7 @@ class MsfParserApiTest(TestCase):
             self.assertEqual(note.ntype, msf_variables.note.ntype)
             self.assertEqual(note.data, msf_variables.note.data)
             self.assertEqual(note.host, msf_variables.host.address)
+            break
 
     # Get creds
     def test07_get_creds(self):
