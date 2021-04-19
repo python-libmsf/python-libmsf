@@ -89,6 +89,93 @@
       </vuln>
     </vulns>
   </host>
+  <host>
+    <id>247</id>
+    <created-at>2021-04-17 14:12:22 UTC</created-at>
+    <address>192.168.1.1</address>
+    <mac>00:11:22:33:44:55</mac>
+    <comm>unittest</comm>
+    <name>unit.test.com</name>
+    <state>alive</state>
+    <os-name>linux</os-name>
+    <os-flavor>test</os-flavor>
+    <os-sp>test</os-sp>
+    <os-lang>English</os-lang>
+    <arch>x86</arch>
+    <workspace-id>241</workspace-id>
+    <updated-at>2021-04-17 14:12:22 UTC</updated-at>
+    <purpose>device</purpose>
+    <info>Host for unit tests</info>
+    <comments>Host for unit tests</comments>
+    <scope>unit tests scope</scope>
+    <virtual-host>unittest</virtual-host>
+    <note-count>1</note-count>
+    <vuln-count>1</vuln-count>
+    <service-count>1</service-count>
+    <host-detail-count>0</host-detail-count>
+    <exploit-attempt-count>0</exploit-attempt-count>
+    <cred-count>0</cred-count>
+    <detected-arch></detected-arch>
+    <os-family>posix</os-family>
+    <host_details>
+    </host_details>
+    <exploit_attempts>
+    </exploit_attempts>
+    <services>
+      <service>
+      <id>272</id>
+      <host-id>247</host-id>
+      <created-at>2021-04-17 14:12:22 UTC</created-at>
+      <port>12345</port>
+      <proto>tcp</proto>
+      <state>open</state>
+      <name>http</name>
+      <updated-at>2021-04-17 14:12:22 UTC</updated-at>
+      <info>Unit test</info>
+      </service>
+    </services>
+    <notes>
+      <note>
+      <id>54</id>
+      <created-at>2021-04-17 14:12:22 UTC</created-at>
+      <ntype>host.comments</ntype>
+      <workspace-id>241</workspace-id>
+      <service-id/>
+      <host-id>247</host-id>
+      <updated-at>2021-04-17 14:12:22 UTC</updated-at>
+      <critical/>
+      <seen/>
+      <data>Unit test host comment</data>
+      <vuln-id/>
+      </note>
+    </notes>
+    <vulns>
+      <vuln>
+      <id>286</id>
+      <host-id>247</host-id>
+      <service-id>272</service-id>
+      <created-at>2021-04-17 14:12:22 UTC</created-at>
+      <name>Unit test vuln name</name>
+      <updated-at>2021-04-17 14:12:22 UTC</updated-at>
+      <info>Unit test vuln info</info>
+      <exploited-at/>
+      <vuln-detail-count>0</vuln-detail-count>
+      <vuln-attempt-count>0</vuln-attempt-count>
+      <origin-id/>
+      <origin-type/>
+        <notes>
+        </notes>
+        <refs>
+          <ref>CVE-2020-2020</ref>
+          <ref>URL-https://unit.test.com/vuln</ref>
+        </refs>
+            <vuln_details>
+            </vuln_details>
+            <vuln_attempts>
+            </vuln_attempts>
+      </vuln>
+    </vulns>
+  </host>
 </hosts>
 <events>
 </events>
@@ -96,6 +183,17 @@
   <service>
       <id>271</id>
       <host-id>246</host-id>
+      <created-at>2021-04-17 14:12:22 UTC</created-at>
+      <port>12345</port>
+      <proto>tcp</proto>
+      <state>open</state>
+      <name>http</name>
+      <updated-at>2021-04-17 14:12:22 UTC</updated-at>
+      <info>Unit test</info>
+  </service>
+  <service>
+      <id>272</id>
+      <host-id>247</host-id>
       <created-at>2021-04-17 14:12:22 UTC</created-at>
       <port>12345</port>
       <proto>tcp</proto>
