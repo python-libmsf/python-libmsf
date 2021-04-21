@@ -85,7 +85,7 @@ MsfParser easy to use:
 
 ## Installing
 
-libmsf can be installed with [pip](https://pip.pypa.io/en/stable/):
+libmsf can be installed with [pip](https://pypi.org/project/libmsf/):
 ```shell
 pip3 install libmsf
 ```
@@ -962,7 +962,6 @@ Removed creds: [Msf.Cred(id=68, workspace_id=215, username=None, private_data=No
 <img src="https://python-libmsf.github.io/images/delete_cred.png" alt="Delete cred">
 
 </details>
-
 
 ## MsfParser
 
