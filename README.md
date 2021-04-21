@@ -81,6 +81,7 @@ MsfParser easy to use:
 
  - [requests](https://pypi.org/project/requests/)
  - [urllib3](https://pypi.org/project/urllib3/)
+ - [dataclasses](https://pypi.org/project/dataclasses/)
 
 ## Installing
 
