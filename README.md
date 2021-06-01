@@ -75,7 +75,6 @@ MsfParser easy to use:
  - Python 3.7
  - Python 3.8
  - Python 3.9
- - Python 3.10
 
 ## Dependencies
 
@@ -963,6 +962,7 @@ Removed creds: [Msf.Cred(id=68, workspace_id=215, username=None, private_data=No
 <img src="https://python-libmsf.github.io/images/delete_cred.png" alt="Delete cred">
 
 </details>
+
 
 ## MsfParser
 
