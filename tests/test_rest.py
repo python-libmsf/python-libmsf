@@ -10,24 +10,26 @@ Copyright 2021, Python Metasploit Library
 from unittest import TestCase
 from test_variables import MsfVariablesForTest
 from libmsf.rest import MsfRestApi
-from libmsf.msf import Msf
-from typing import Union, List, Dict
+from libmsf import Msf
+from typing import Optional, List
 
 # Authorship information
-__author__ = 'Vladimir Ivanov'
-__copyright__ = 'Copyright 2021, Python Metasploit Library'
-__credits__ = ['']
-__license__ = 'MIT'
-__version__ = '0.1.2'
-__maintainer__ = 'Vladimir Ivanov'
-__email__ = 'ivanov.vladimir.mail@gmail.com'
-__status__ = 'Development'
+__author__ = "Vladimir Ivanov"
+__copyright__ = "Copyright 2021, Python Metasploit Library"
+__credits__ = [""]
+__license__ = "MIT"
+__version__ = "0.2.1"
+__maintainer__ = "Vladimir Ivanov"
+__email__ = "ivanov.vladimir.mail@gmail.com"
+__status__ = "Development"
 
 # Global variables
 msf_variables: MsfVariablesForTest = MsfVariablesForTest()
-msf_api: MsfRestApi = MsfRestApi(api_key=msf_variables.api_key,
-                                 api_url=msf_variables.api_url,
-                                 proxy=msf_variables.proxy)
+msf_api: MsfRestApi = MsfRestApi(
+    api_key=msf_variables.api_key,
+    api_url=msf_variables.api_url,
+    proxy=msf_variables.proxy,
+)
 
 
 # Class MsfRestApiTest
@@ -46,78 +48,78 @@ class MsfRestApiTest(TestCase):
     # Create host
     def test02_create_host(self):
         # Normal
-        host_id: Union[None, int] = msf_api.create_host(msf_variables.host)
+        host_id: Optional[int] = msf_api.create_host(msf_variables.host)
         self.assertIsInstance(host_id, int)
         self.assertLess(0, host_id)
         msf_variables.host.id = host_id
 
         # Bad workspace
         bad_host = msf_variables.host
-        bad_host.workspace = '_bad_workspace_'
-        host_id: Union[None, int] = msf_api.create_host(bad_host)
+        bad_host.workspace = "_bad_workspace_"
+        host_id: Optional[int] = msf_api.create_host(bad_host)
         self.assertIsNone(host_id)
 
     # Create service
     def test03_create_service(self):
         # Normal
-        service_id: Union[None, int] = msf_api.create_service(msf_variables.service)
+        service_id: Optional[int] = msf_api.create_service(msf_variables.service)
         self.assertIsInstance(service_id, int)
         self.assertLess(0, service_id)
         msf_variables.service.id = service_id
 
         # Bad workspace
         bad_service: Msf.Service = msf_variables.service
-        bad_service.workspace = '_bad_workspace_'
-        service_id: Union[None, int] = msf_api.create_service(bad_service)
+        bad_service.workspace = "_bad_workspace_"
+        service_id: Optional[int] = msf_api.create_service(bad_service)
         self.assertIsNone(service_id)
 
     # Create vuln
     def test04_create_vuln(self):
         # Normal
-        vuln_id: Union[None, int] = msf_api.create_vuln(msf_variables.vuln)
+        vuln_id: Optional[int] = msf_api.create_vuln(msf_variables.vuln)
         self.assertIsInstance(vuln_id, int)
         self.assertLess(0, vuln_id)
         msf_variables.vuln.id = vuln_id
 
         # Bad workspace
         bad_vuln: Msf.Vuln = msf_variables.vuln
-        bad_vuln.workspace = '_bad_workspace_'
-        vuln_id: Union[None, int] = msf_api.create_vuln(bad_vuln)
+        bad_vuln.workspace = "_bad_workspace_"
+        vuln_id: Optional[int] = msf_api.create_vuln(bad_vuln)
         self.assertIsNone(vuln_id)
 
     # Create loot
     def test05_create_loot(self):
         # Normal
-        loot_id: Union[None, int] = msf_api.create_loot(msf_variables.loot)
+        loot_id: Optional[int] = msf_api.create_loot(msf_variables.loot)
         self.assertIsInstance(loot_id, int)
         self.assertLess(0, loot_id)
         msf_variables.loot.id = loot_id
 
         # Bad workspace
         bad_loot: Msf.Loot = msf_variables.loot
-        bad_loot.workspace = '_bad_workspace_'
-        loot_id: Union[None, int] = msf_api.create_loot(bad_loot)
+        bad_loot.workspace = "_bad_workspace_"
+        loot_id: Optional[int] = msf_api.create_loot(bad_loot)
         self.assertIsNone(loot_id)
 
     # Create note
     def test06_create_note(self):
         # Normal
-        note_id: Union[None, int] = msf_api.create_note(msf_variables.note)
+        note_id: Optional[int] = msf_api.create_note(msf_variables.note)
         self.assertIsInstance(note_id, int)
         self.assertLess(0, note_id)
         msf_variables.note.id = note_id
 
         # Bad workspace
         bad_note: Msf.Note = msf_variables.note
-        bad_note.workspace = '_bad_workspace_'
-        note_id: Union[None, int] = msf_api.create_note(bad_note)
+        bad_note.workspace = "_bad_workspace_"
+        note_id: Optional[int] = msf_api.create_note(bad_note)
         self.assertIsNone(note_id)
 
     # Create cred
     def test07_create_cred(self):
         # Normal
         msf_variables.cred.workspace_id = msf_variables.workspace.id
-        cred_id: Union[None, int] = msf_api.create_cred(msf_variables.cred)
+        cred_id: Optional[int] = msf_api.create_cred(msf_variables.cred)
         self.assertIsInstance(cred_id, int)
         self.assertLess(0, cred_id)
         msf_variables.cred.id = cred_id
@@ -125,7 +127,7 @@ class MsfRestApiTest(TestCase):
         # Bad workspace
         bad_cred: Msf.Cred = msf_variables.cred
         bad_cred.workspace_id = -123
-        cred_id: Union[None, int] = msf_api.create_cred(bad_cred)
+        cred_id: Optional[int] = msf_api.create_cred(bad_cred)
         self.assertIsNone(cred_id)
 
     # Create note
@@ -133,7 +135,7 @@ class MsfRestApiTest(TestCase):
         # Normal
         msf_variables.login.workspace_id = msf_variables.workspace.id
         msf_variables.login.core_id = msf_variables.cred.id
-        login_id: Union[None, int] = msf_api.create_login(msf_variables.login)
+        login_id: Optional[int] = msf_api.create_login(msf_variables.login)
         self.assertIsInstance(login_id, int)
         self.assertLess(0, login_id)
         msf_variables.login.id = login_id
@@ -141,7 +143,7 @@ class MsfRestApiTest(TestCase):
         # Bad workspace
         bad_login: Msf.Login = msf_variables.login
         bad_login.workspace_id = -123
-        login_id: Union[None, int] = msf_api.create_login(bad_login)
+        login_id: Optional[int] = msf_api.create_login(bad_login)
         self.assertIsNone(login_id)
 
     # Get methods
@@ -159,7 +161,10 @@ class MsfRestApiTest(TestCase):
         workspace_exist: bool = False
         for workspace in workspaces:
             self.assertIsInstance(workspace, Msf.Workspace)
-            if workspace.name == msf_variables.workspace.name and workspace.id == msf_variables.workspace.id:
+            if (
+                workspace.name == msf_variables.workspace.name
+                and workspace.id == msf_variables.workspace.id
+            ):
                 workspace_exist = True
         self.assertTrue(workspace_exist)
 
@@ -169,7 +174,9 @@ class MsfRestApiTest(TestCase):
     # Get hosts
     def test12_get_hosts(self):
         # Normal
-        hosts: List[Msf.Host] = msf_api.get_hosts(workspace=msf_variables.workspace.name)
+        hosts: List[Msf.Host] = msf_api.get_hosts(
+            workspace=msf_variables.workspace.name
+        )
         host: Msf.Host = hosts[0]
         if msf_variables.host.id != -1:
             self.assertEqual(host.id, msf_variables.host.id)
@@ -191,14 +198,17 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(host.virtual_host, msf_variables.host.virtual_host)
 
         # Get host by id
-        host: Msf.Host = msf_api.get_host_by_id(workspace=msf_variables.workspace.name,
-                                                host_id=msf_variables.host.id)
+        host: Msf.Host = msf_api.get_host_by_id(
+            workspace=msf_variables.workspace.name, host_id=msf_variables.host.id
+        )
         self.assertEqual(host.address, msf_variables.host.address)
 
     # Get services
     def test13_get_services(self):
         # Normal
-        services: List[Msf.Service] = msf_api.get_services(workspace=msf_variables.workspace.name)
+        services: List[Msf.Service] = msf_api.get_services(
+            workspace=msf_variables.workspace.name
+        )
         service: Msf.Service = services[0]
         if msf_variables.service.id != -1:
             self.assertEqual(service.id, msf_variables.service.id)
@@ -214,17 +224,33 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(service.name, msf_variables.service.name)
         self.assertEqual(service.info, msf_variables.service.info)
         self.assertEqual(service.host.address, msf_variables.host.address)
+        self.assertEqual(service.host.mac, msf_variables.host.mac)
+        self.assertEqual(service.host.name, msf_variables.host.name)
+        self.assertEqual(service.host.state, msf_variables.host.state)
+        self.assertEqual(service.host.os_name, msf_variables.host.os_name)
+        self.assertEqual(service.host.os_flavor, msf_variables.host.os_flavor)
+        self.assertEqual(service.host.os_sp, msf_variables.host.os_sp)
+        self.assertEqual(service.host.os_lang, msf_variables.host.os_lang)
+        self.assertEqual(service.host.arch, msf_variables.host.arch)
+        self.assertEqual(service.host.purpose, msf_variables.host.purpose)
+        self.assertEqual(service.host.info, msf_variables.host.info)
+        self.assertEqual(service.host.comments, msf_variables.host.comments)
+        self.assertEqual(service.host.scope, msf_variables.host.scope)
+        self.assertEqual(service.host.virtual_host, msf_variables.host.virtual_host)
 
         # Get service by id
-        service: Msf.Service = msf_api.get_service_by_id(workspace=msf_variables.workspace.name,
-                                                         service_id=msf_variables.service.id)
+        service: Msf.Service = msf_api.get_service_by_id(
+            workspace=msf_variables.workspace.name, service_id=msf_variables.service.id
+        )
         self.assertEqual(service.port, msf_variables.service.port)
         self.assertEqual(service.host.address, msf_variables.host.address)
 
     # Get vulns
     def test14_get_vulns(self):
         # Normal
-        vulns: List[Msf.Vuln] = msf_api.get_vulns(workspace=msf_variables.workspace.name)
+        vulns: List[Msf.Vuln] = msf_api.get_vulns(
+            workspace=msf_variables.workspace.name
+        )
         vuln: Msf.Vuln = vulns[0]
         if msf_variables.vuln.id != -1:
             self.assertEqual(vuln.id, msf_variables.vuln.id)
@@ -240,19 +266,35 @@ class MsfRestApiTest(TestCase):
             msf_variables.service.id = vuln.service_id
         self.assertEqual(vuln.name, msf_variables.vuln.name)
         self.assertEqual(vuln.info, msf_variables.vuln.info)
-        self.assertEqual(vuln.refs[0]['name'], msf_variables.vuln.refs[0])
-        self.assertEqual(vuln.refs[1]['name'], msf_variables.vuln.refs[1])
+        self.assertEqual(vuln.refs[0], msf_variables.vuln.refs[0])
+        self.assertEqual(vuln.refs[1], msf_variables.vuln.refs[1])
         self.assertEqual(vuln.host.address, msf_variables.host.address)
+        self.assertEqual(vuln.host.mac, msf_variables.host.mac)
+        self.assertEqual(vuln.host.name, msf_variables.host.name)
+        self.assertEqual(vuln.host.state, msf_variables.host.state)
+        self.assertEqual(vuln.host.os_name, msf_variables.host.os_name)
+        self.assertEqual(vuln.host.os_flavor, msf_variables.host.os_flavor)
+        self.assertEqual(vuln.host.os_sp, msf_variables.host.os_sp)
+        self.assertEqual(vuln.host.os_lang, msf_variables.host.os_lang)
+        self.assertEqual(vuln.host.arch, msf_variables.host.arch)
+        self.assertEqual(vuln.host.purpose, msf_variables.host.purpose)
+        self.assertEqual(vuln.host.info, msf_variables.host.info)
+        self.assertEqual(vuln.host.comments, msf_variables.host.comments)
+        self.assertEqual(vuln.host.scope, msf_variables.host.scope)
+        self.assertEqual(vuln.host.virtual_host, msf_variables.host.virtual_host)
 
         # Get service by id
-        vuln: Msf.Vuln = msf_api.get_vuln_by_id(workspace=msf_variables.workspace.name,
-                                                vuln_id=msf_variables.vuln.id)
+        vuln: Msf.Vuln = msf_api.get_vuln_by_id(
+            workspace=msf_variables.workspace.name, vuln_id=msf_variables.vuln.id
+        )
         self.assertEqual(vuln.host.address, msf_variables.host.address)
 
     # Get loots
     def test15_get_loots(self):
         # Normal
-        loots: List[Msf.Loot] = msf_api.get_loots(workspace=msf_variables.workspace.name)
+        loots: List[Msf.Loot] = msf_api.get_loots(
+            workspace=msf_variables.workspace.name
+        )
         loot: Msf.Loot = loots[0]
         if msf_variables.loot.id != -1:
             self.assertEqual(loot.id, msf_variables.loot.id)
@@ -267,16 +309,32 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(loot.name, msf_variables.loot.name)
         self.assertEqual(loot.info, msf_variables.loot.info)
         self.assertEqual(loot.host.address, msf_variables.host.address)
+        self.assertEqual(loot.host.mac, msf_variables.host.mac)
+        self.assertEqual(loot.host.name, msf_variables.host.name)
+        self.assertEqual(loot.host.state, msf_variables.host.state)
+        self.assertEqual(loot.host.os_name, msf_variables.host.os_name)
+        self.assertEqual(loot.host.os_flavor, msf_variables.host.os_flavor)
+        self.assertEqual(loot.host.os_sp, msf_variables.host.os_sp)
+        self.assertEqual(loot.host.os_lang, msf_variables.host.os_lang)
+        self.assertEqual(loot.host.arch, msf_variables.host.arch)
+        self.assertEqual(loot.host.purpose, msf_variables.host.purpose)
+        self.assertEqual(loot.host.info, msf_variables.host.info)
+        self.assertEqual(loot.host.comments, msf_variables.host.comments)
+        self.assertEqual(loot.host.scope, msf_variables.host.scope)
+        self.assertEqual(loot.host.virtual_host, msf_variables.host.virtual_host)
 
         # Get loot by id
-        loot: Msf.Loot = msf_api.get_loot_by_id(workspace=msf_variables.workspace.name,
-                                                loot_id=msf_variables.loot.id)
+        loot: Msf.Loot = msf_api.get_loot_by_id(
+            workspace=msf_variables.workspace.name, loot_id=msf_variables.loot.id
+        )
         self.assertEqual(loot.host.address, msf_variables.host.address)
 
     # Get notes
     def test16_get_notes(self):
         # Normal
-        notes: List[Msf.Note] = msf_api.get_notes(workspace=msf_variables.workspace.name)
+        notes: List[Msf.Note] = msf_api.get_notes(
+            workspace=msf_variables.workspace.name
+        )
         note: Msf.Note = notes[0]
         if msf_variables.note.id != -1:
             self.assertEqual(note.id, msf_variables.note.id)
@@ -289,16 +347,32 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(note.ntype, msf_variables.note.ntype)
         self.assertEqual(note.data, msf_variables.note.data)
         self.assertEqual(note.host.address, msf_variables.host.address)
+        self.assertEqual(note.host.mac, msf_variables.host.mac)
+        self.assertEqual(note.host.name, msf_variables.host.name)
+        self.assertEqual(note.host.state, msf_variables.host.state)
+        self.assertEqual(note.host.os_name, msf_variables.host.os_name)
+        self.assertEqual(note.host.os_flavor, msf_variables.host.os_flavor)
+        self.assertEqual(note.host.os_sp, msf_variables.host.os_sp)
+        self.assertEqual(note.host.os_lang, msf_variables.host.os_lang)
+        self.assertEqual(note.host.arch, msf_variables.host.arch)
+        self.assertEqual(note.host.purpose, msf_variables.host.purpose)
+        self.assertEqual(note.host.info, msf_variables.host.info)
+        self.assertEqual(note.host.comments, msf_variables.host.comments)
+        self.assertEqual(note.host.scope, msf_variables.host.scope)
+        self.assertEqual(note.host.virtual_host, msf_variables.host.virtual_host)
 
         # Get loot by id
-        note: Msf.Note = msf_api.get_note_by_id(workspace=msf_variables.workspace.name,
-                                                note_id=msf_variables.note.id)
+        note: Msf.Note = msf_api.get_note_by_id(
+            workspace=msf_variables.workspace.name, note_id=msf_variables.note.id
+        )
         self.assertEqual(note.host.address, msf_variables.host.address)
 
     # Get creds
     def test17_get_creds(self):
         # Normal
-        creds: List[Msf.Cred] = msf_api.get_creds(workspace=msf_variables.workspace.name)
+        creds: List[Msf.Cred] = msf_api.get_creds(
+            workspace=msf_variables.workspace.name
+        )
         cred: Msf.Cred = creds[0]
         if msf_variables.cred.id != -1:
             self.assertEqual(cred.id, msf_variables.cred.id)
@@ -307,15 +381,22 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(cred.public.username, msf_variables.cred.username)
         self.assertEqual(cred.private.data, msf_variables.cred.private_data)
         self.assertEqual(cred.private.jtr_format, msf_variables.cred.jtr_format)
+        if msf_variables.workspace.id != -1:
+            self.assertEqual(cred.workspace_id, msf_variables.workspace.id)
+        else:
+            msf_variables.workspace.id = cred.workspace_id
         if msf_variables.service.id != -1:
             self.assertEqual(cred.origin.service_id, msf_variables.service.id)
         else:
             msf_variables.service.id = cred.origin.service_id
-        self.assertEqual(cred.origin.module_full_name, msf_variables.cred.module_fullname)
+        self.assertEqual(
+            cred.origin.module_full_name, msf_variables.cred.module_fullname
+        )
 
         # Get cred by id
-        cred: Msf.Cred = msf_api.get_cred_by_id(workspace=msf_variables.workspace.name,
-                                                cred_id=msf_variables.cred.id)
+        cred: Msf.Cred = msf_api.get_cred_by_id(
+            workspace=msf_variables.workspace.name, cred_id=msf_variables.cred.id
+        )
         self.assertEqual(cred.id, msf_variables.cred.id)
 
     # Get logins
@@ -332,13 +413,19 @@ class MsfRestApiTest(TestCase):
         # Get login by id
         login: Msf.Login = msf_api.get_login_by_id(login_id=msf_variables.login.id)
         self.assertEqual(login.id, msf_variables.login.id)
+        if msf_variables.service.id != -1:
+            self.assertEqual(login.service_id, msf_variables.service.id)
+        else:
+            msf_variables.service.id = login.service_id
 
     # Delete methods
 
     # Delete login
     def test21_delete_login(self):
         # Normal
-        logins: Union[None, List[Msf.Login]] = msf_api.delete_logins(ids=[msf_variables.login.id])
+        logins: Optional[List[Msf.Login]] = msf_api.delete_logins(
+            ids=[msf_variables.login.id]
+        )
         login: Msf.Login = logins[0]
         self.assertEqual(login.id, msf_variables.login.id)
         self.assertEqual(login.core_id, msf_variables.cred.id)
@@ -348,28 +435,35 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(login.status, msf_variables.login.status)
 
         # Bad login id
-        login_info: Union[None, List[Dict]] = msf_api.delete_logins(ids=[-123])
-        self.assertIsNone(login_info)
+        logins: Optional[List[Msf.Login]] = msf_api.delete_logins(ids=[-123])
+        self.assertIsNone(logins)
 
     # Delete credential
     def test22_delete_cred(self):
         # Normal
-        creds: Union[None, List[Msf.Cred]] = msf_api.delete_creds(ids=[msf_variables.cred.id])
+        creds: Optional[List[Msf.Cred]] = msf_api.delete_creds(
+            ids=[msf_variables.cred.id]
+        )
         cred: Msf.Cred = creds[0]
         self.assertEqual(cred.id, msf_variables.cred.id)
+        self.assertEqual(cred.workspace_id, msf_variables.workspace.id)
 
         # Get credentials
-        cred_info: List[Msf.Cred] = msf_api.get_creds(workspace=msf_variables.workspace.name)
-        self.assertListEqual(cred_info, [])
+        creds: Optional[List[Msf.Cred]] = msf_api.get_creds(
+            workspace=msf_variables.workspace.name
+        )
+        self.assertListEqual(creds, [])
 
         # Bad credential id
-        cred_info: Union[None, List[Dict]] = msf_api.delete_creds(ids=[-123])
-        self.assertIsNone(cred_info)
+        creds: Optional[List[Msf.Cred]] = msf_api.delete_creds(ids=[-123])
+        self.assertIsNone(creds)
 
     # Delete note
     def test23_delete_note(self):
         # Normal
-        notes: Union[None, List[Msf.Note]] = msf_api.delete_notes(ids=[msf_variables.note.id])
+        notes: Optional[List[Msf.Note]] = msf_api.delete_notes(
+            ids=[msf_variables.note.id]
+        )
         note: Msf.Note = notes[0]
         self.assertEqual(note.id, msf_variables.note.id)
         self.assertEqual(note.workspace_id, msf_variables.workspace.id)
@@ -378,17 +472,21 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(note.data, msf_variables.note.data)
 
         # Get Notes
-        note_info: List[Msf.Note] = msf_api.get_notes(workspace=msf_variables.workspace.name)
-        self.assertListEqual(note_info, [])
+        notes: Optional[List[Msf.Note]] = msf_api.get_notes(
+            workspace=msf_variables.workspace.name
+        )
+        self.assertListEqual(notes, [])
 
         # Bad loot id
-        note_info: Union[None, List[Dict]] = msf_api.delete_notes(ids=[-123])
-        self.assertIsNone(note_info)
+        notes: Optional[List[Msf.Note]] = msf_api.delete_notes(ids=[-123])
+        self.assertIsNone(notes)
 
     # Delete loot
     def test24_delete_loot(self):
         # Normal
-        loots: Union[None, List[Msf.Loot]] = msf_api.delete_loots(ids=[msf_variables.loot.id])
+        loots: Optional[List[Msf.Loot]] = msf_api.delete_loots(
+            ids=[msf_variables.loot.id]
+        )
         loot: Msf.Loot = loots[0]
         self.assertEqual(loot.workspace_id, msf_variables.workspace.id)
         self.assertEqual(loot.host_id, msf_variables.host.id)
@@ -400,17 +498,21 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(loot.info, msf_variables.loot.info)
 
         # Get loots
-        loot_info: List[Msf.Loot] = msf_api.get_loots(workspace=msf_variables.workspace.name)
-        self.assertListEqual(loot_info, [])
+        loots: Optional[List[Msf.Loot]] = msf_api.get_loots(
+            workspace=msf_variables.workspace.name
+        )
+        self.assertListEqual(loots, [])
 
         # Bad loot id
-        loot_info: Union[None, List[Dict]] = msf_api.delete_loots(ids=[-123])
-        self.assertIsNone(loot_info)
+        loots: Optional[List[Msf.Loot]] = msf_api.delete_loots(ids=[-123])
+        self.assertIsNone(loots)
 
     # Delete vulnerability
     def test25_delete_vuln(self):
         # Normal
-        vulns: List[Msf.Vuln] = msf_api.delete_vulns(ids=[msf_variables.vuln.id])
+        vulns: Optional[List[Msf.Vuln]] = msf_api.delete_vulns(
+            ids=[msf_variables.vuln.id]
+        )
         vuln: Msf.Vuln = vulns[0]
         self.assertEqual(vuln.id, msf_variables.vuln.id)
         self.assertEqual(vuln.host_id, msf_variables.host.id)
@@ -420,17 +522,21 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(vuln.host.address, msf_variables.host.address)
 
         # Get vulnerabilities
-        vuln_info: List[Msf.Vuln] = msf_api.get_vulns(workspace=msf_variables.workspace.name)
-        self.assertListEqual(vuln_info, [])
+        vulns: Optional[List[Msf.Vuln]] = msf_api.get_vulns(
+            workspace=msf_variables.workspace.name
+        )
+        self.assertListEqual(vulns, [])
 
         # Bad vulnerability id
-        vuln_info: Union[None, List[Msf.Vuln]] = msf_api.delete_vulns(ids=[-123])
-        self.assertIsNone(vuln_info)
+        vulns: Optional[List[Msf.Vuln]] = msf_api.delete_vulns(ids=[-123])
+        self.assertIsNone(vulns)
 
     # Delete service
     def test26_delete_service(self):
         # Normal
-        services: List[Msf.Service] = msf_api.delete_services(ids=[msf_variables.service.id])
+        services: Optional[List[Msf.Service]] = msf_api.delete_services(
+            ids=[msf_variables.service.id]
+        )
         service: Msf.Service = services[0]
         self.assertEqual(service.id, msf_variables.service.id)
         self.assertEqual(service.host_id, msf_variables.host.id)
@@ -441,17 +547,21 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(service.info, msf_variables.service.info)
 
         # Get services
-        service_info: List[Msf.Service] = msf_api.get_services(workspace=msf_variables.workspace.name)
-        self.assertListEqual(service_info, [])
+        services: Optional[List[Msf.Service]] = msf_api.get_services(
+            workspace=msf_variables.workspace.name
+        )
+        self.assertListEqual(services, [])
 
         # Bad service id
-        service_info: Union[None, List[Dict]] = msf_api.delete_services(ids=[-123])
-        self.assertIsNone(service_info)
+        services: Optional[List[Msf.Service]] = msf_api.delete_services(ids=[-123])
+        self.assertIsNone(services)
 
     # Delete host
     def test27_delete_host(self):
         # Normal
-        hosts: List[Msf.Host] = msf_api.delete_hosts(ids=[msf_variables.host.id])
+        hosts: Optional[List[Msf.Host]] = msf_api.delete_hosts(
+            ids=[msf_variables.host.id]
+        )
         host: Msf.Host = hosts[0]
         if msf_variables.host.id != -1:
             self.assertEqual(host.id, msf_variables.host.id)
@@ -473,12 +583,14 @@ class MsfRestApiTest(TestCase):
         self.assertEqual(host.virtual_host, msf_variables.host.virtual_host)
 
         # Get hosts
-        host_info: List[Msf.Host] = msf_api.get_hosts(workspace=msf_variables.workspace.name)
-        self.assertListEqual(host_info, [])
+        hosts: Optional[List[Msf.Host]] = msf_api.get_hosts(
+            workspace=msf_variables.workspace.name
+        )
+        self.assertListEqual(hosts, [])
 
         # Bad host id
-        host_info: Union[None, List[Dict]] = msf_api.delete_hosts(ids=[-123])
-        self.assertIsNone(host_info)
+        hosts: Optional[List[Msf.Host]] = msf_api.delete_hosts(ids=[-123])
+        self.assertIsNone(hosts)
 
     # Delete workspace
     def test28_delete_workspace(self):
@@ -488,9 +600,10 @@ class MsfRestApiTest(TestCase):
         self.assertLess(0, test_workspace_id)
         msf_variables.workspace.id = test_workspace_id
 
-
         # Normal
-        workspaces: Union[None, List[Msf.Workspace]] = msf_api.delete_workspaces(ids=[msf_variables.workspace.id])
+        workspaces: Optional[List[Msf.Workspace]] = msf_api.delete_workspaces(
+            ids=[msf_variables.workspace.id]
+        )
         self.assertIsInstance(workspaces, list)
         workspace: Msf.Workspace = workspaces[0]
         self.assertEqual(workspace.id, msf_variables.workspace.id)
@@ -501,10 +614,15 @@ class MsfRestApiTest(TestCase):
         self.assertIsInstance(workspaces, list)
         workspace_exist: bool = False
         for workspace in workspaces:
-            if workspace.name == msf_variables.workspace.name and workspace.id == msf_variables.workspace.id:
+            if (
+                workspace.name == msf_variables.workspace.name
+                and workspace.id == msf_variables.workspace.id
+            ):
                 workspace_exist = True
         self.assertFalse(workspace_exist)
 
         # Bad workspace id
-        workspace_info: Union[None, List[Dict]] = msf_api.delete_workspaces(ids=[-123])
-        self.assertIsNone(workspace_info)
+        workspaces: Optional[List[Msf.Workspace]] = msf_api.delete_workspaces(
+            ids=[-123]
+        )
+        self.assertIsNone(workspaces)

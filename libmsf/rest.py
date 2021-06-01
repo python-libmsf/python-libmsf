@@ -7,23 +7,23 @@ Copyright 2021, Python Metasploit Library
 """
 
 # Import
-from libmsf.msf import Msf, MsfData
+from libmsf import Msf, MsfData
 from requests import Session, Response
-from typing import List, Dict, Union, Type
+from typing import List, Dict, Type, Optional
 from dataclasses import dataclass
 from urllib3 import disable_warnings
 from urllib3.exceptions import InsecureRequestWarning
 from argparse import ArgumentParser
 
 # Authorship information
-__author__ = 'Vladimir Ivanov'
-__copyright__ = 'Copyright 2021, Python Metasploit Library'
-__credits__ = ['']
-__license__ = 'MIT'
-__version__ = '0.1.2'
-__maintainer__ = 'Vladimir Ivanov'
-__email__ = 'ivanov.vladimir.mail@gmail.com'
-__status__ = 'Development'
+__author__ = "Vladimir Ivanov"
+__copyright__ = "Copyright 2021, Python Metasploit Library"
+__credits__ = [""]
+__license__ = "MIT"
+__version__ = "0.2.1"
+__maintainer__ = "Vladimir Ivanov"
+__email__ = "ivanov.vladimir.mail@gmail.com"
+__status__ = "Development"
 
 
 # Class MsfRestApi
@@ -31,23 +31,25 @@ class MsfRestApi:
     # Set variables
     @dataclass
     class Endpoints:
-        home: str = '/'
-        creds: str = '/api/v1/credentials'
-        hosts: str = '/api/v1/hosts'
-        logins: str = '/api/v1/logins'
-        loots: str = '/api/v1/loots'
-        notes: str = '/api/v1/notes'
-        services: str = '/api/v1/services'
-        vulns: str = '/api/v1/vulns'
-        workspaces: str = '/api/v1/workspaces'
+        home: str = "/"
+        creds: str = "/api/v1/credentials"
+        hosts: str = "/api/v1/hosts"
+        logins: str = "/api/v1/logins"
+        loots: str = "/api/v1/loots"
+        notes: str = "/api/v1/notes"
+        services: str = "/api/v1/services"
+        vulns: str = "/api/v1/vulns"
+        workspaces: str = "/api/v1/workspaces"
 
     _endpoints: Endpoints = Endpoints()
 
     # Init
-    def __init__(self,
-                 api_key: str,
-                 api_url: str = 'https://msf.corp.test.com:5443',
-                 proxy: Union[None, str] = None) -> None:
+    def __init__(
+        self,
+        api_key: str,
+        api_url: str = "https://msf.corp.test.com:5443",
+        proxy: Optional[str] = None,
+    ) -> None:
         """
         Init MsfRestApi Class
         @param api_key: MSF REST API key string, example: 5c28984c3b034d2f30eff0070bd779c8080489bcff6bd79872d62f1411331901fa242ae39b6c6a62
@@ -57,23 +59,27 @@ class MsfRestApi:
         self._api_url = api_url
         self._api_key = api_key
         self._session: Session = Session()
-        self._session.headers.update({
-            'User-Agent': 'Metasploit REST API Agent v.0.0.1',
-            'Accept': 'application/json',
-            'Connection': 'close',
-            'Authorization': 'Bearer ' + api_key
-        })
+        self._session.headers.update(
+            {
+                "User-Agent": "Metasploit REST API Agent/" + "0.2.1",
+                "Accept": "application/json",
+                "Connection": "close",
+                "Authorization": "Bearer " + api_key,
+            }
+        )
         if proxy is not None:
-            self._session.proxies.update({
-                'http': proxy,
-                'https': proxy,
-            })
+            self._session.proxies.update(
+                {
+                    "http": proxy,
+                    "https": proxy,
+                }
+            )
         self._session.verify = False
         disable_warnings(InsecureRequestWarning)
         try:
             self.get_workspaces()
         except AssertionError as error:
-            print('[Assert Exception] Error: ' + error.args[0])
+            print("[Assert Exception] Error: " + error.args[0])
             exit(1)
 
     # Check responses
@@ -92,105 +98,118 @@ class MsfRestApi:
                 dataclass_object.__dict__[key] = dict_object[key]
         return dataclass_object
 
-    def _check_get_response(self,
-                            response: Response,
-                            dataclass_type: Type) -> Union[None, List[dataclass]]:
+    @staticmethod
+    def _check_get_response(
+        response: Response, dataclass_schema: Type
+    ) -> Optional[List[dataclass]]:
         """
         Check HTTP response for GET request
         @param response: HTTP response
         @return: List of dataclasses if success or None if error
         """
         try:
-            assert response.status_code == 200, \
-                'Bad status code: ' + str(response.status_code) + \
-                ' in request: ' + str(response.request.method) + ' ' + str(response.request.url)
-            assert 'data' in response.json(), 'Not found \'data\' object in json response: ' + str(response.json())
-            _dataclass_objects: List[dataclass_type] = list()
-            for dictionary in response.json()['data']:
-                _dataclass_object: dataclass_type = self._dict_to_dataclass(dictionary, dataclass_type)
-                if 'host' in dictionary and 'host' in _dataclass_object.__dict__:
-                    _dataclass_object.host = self._dict_to_dataclass(dictionary['host'], Msf.Host)
-                if dataclass_type == Msf.Cred:
-                    if 'logins' in dictionary:
-                        _logins: List[Msf.Login] = list()
-                        for login_dictionary in dictionary['logins']:
-                            _login: Msf.Login = self._dict_to_dataclass(login_dictionary, Msf.Login)
-                            _logins.append(_login)
-                        _dataclass_object.logins = _logins
-                    if 'public' in dictionary:
-                        _dataclass_object.public = self._dict_to_dataclass(dictionary['public'], Msf.Public)
-                    if 'private' in dictionary:
-                        _dataclass_object.private = self._dict_to_dataclass(dictionary['private'], Msf.Private)
-                    if 'origin' in dictionary:
-                        _dataclass_object.origin = self._dict_to_dataclass(dictionary['origin'], Msf.Origin)
-                _dataclass_objects.append(_dataclass_object)
+            assert response.status_code == 200, (
+                "Bad status code: "
+                + str(response.status_code)
+                + " in request: "
+                + str(response.request.method)
+                + " "
+                + str(response.request.url)
+            )
+            assert (
+                "data" in response.json()
+            ), "Not found 'data' object in json response: " + str(response.json())
+
+            _dataclass_schema = dataclass_schema(many=True)
+            _dataclass_objects: List[dataclass] = _dataclass_schema.load(
+                response.json()["data"]
+            )
             return _dataclass_objects
 
         except AssertionError as Error:
-            if (response.status_code == 500 or
-                response.status_code == 401) and \
-                    'error' in response.json() and \
-                    'code' in response.json()['error'] and \
-                    'message' in response.json()['error']:
-                print('[Assertion Exception] Error code: ' + str(response.json()['error']['code']) +
-                      '; error message: ' + str(response.json()['error']['message']))
+            if (
+                (response.status_code == 500 or response.status_code == 401)
+                and "error" in response.json()
+                and "code" in response.json()["error"]
+                and "message" in response.json()["error"]
+            ):
+                print(
+                    "[Assertion Exception] Error code: "
+                    + str(response.json()["error"]["code"])
+                    + "; error message: "
+                    + str(response.json()["error"]["message"])
+                )
             else:
-                print('[Assertion Exception] Error: ' + Error.args[0])
+                print("[Assertion Exception] Error: " + Error.args[0])
             return None
 
         except ValueError as Error:
-            print('[Value Exception] Error: ' + Error.args[0])
+            print("[Value Exception] Error: " + Error.args[0])
             return None
 
     @staticmethod
-    def _check_create_response(response: Response) -> Union[int, None]:
+    def _check_create_response(response: Response) -> Optional[int]:
         """
         Check HTTP response for POST request
         @param response: HTTP response
         @return: Object "id" integer or None if error
         """
         try:
-            assert response.status_code == 200, \
-                'Bad status code: ' + str(response.status_code) + \
-                ' in request: ' + str(response.request.method) + ' ' + str(response.request.url)
-            assert 'data' in response.json(), 'Not found \'data\' object in json response: ' + str(response.json())
-            if isinstance(response.json()['data'], dict):
-                if 'id' in response.json()['data']:
-                    if isinstance(response.json()['data']['id'], int):
-                        return response.json()['data']['id']
+            assert response.status_code == 200, (
+                "Bad status code: "
+                + str(response.status_code)
+                + " in request: "
+                + str(response.request.method)
+                + " "
+                + str(response.request.url)
+            )
+            assert (
+                "data" in response.json()
+            ), "Not found 'data' object in json response: " + str(response.json())
+            if isinstance(response.json()["data"], dict):
+                if "id" in response.json()["data"]:
+                    if isinstance(response.json()["data"]["id"], int):
+                        return response.json()["data"]["id"]
                 return None
             else:
                 return None
 
         except AssertionError as Error:
-            if (response.status_code == 500 or
-                response.status_code == 401) and \
-                    'error' in response.json() and \
-                    'code' in response.json()['error'] and \
-                    'message' in response.json()['error']:
-                print('[Assertion Exception] Error code: ' + str(response.json()['error']['code']) +
-                      '; error message: ' + str(response.json()['error']['message']))
+            if (
+                (response.status_code == 500 or response.status_code == 401)
+                and "error" in response.json()
+                and "code" in response.json()["error"]
+                and "message" in response.json()["error"]
+            ):
+                print(
+                    "[Assertion Exception] Error code: "
+                    + str(response.json()["error"]["code"])
+                    + "; error message: "
+                    + str(response.json()["error"]["message"])
+                )
             else:
-                print('[Assertion Exception] Error: ' + Error.args[0])
+                print("[Assertion Exception] Error: " + Error.args[0])
             return None
 
         except ValueError as Error:
-            print('[Value Exception] Error: ' + Error.args[0])
+            print("[Value Exception] Error: " + Error.args[0])
             return None
 
-    def _check_delete_response(self,
-                               response: Response,
-                               dataclass_type: Type) -> Union[None, List[dataclass]]:
+    def _check_delete_response(
+        self, response: Response, dataclass_schema: Type
+    ) -> Optional[List[dataclass]]:
         """
         Check HTTP response for DELETE request
         @param response: HTTP response
         @return: List of dataclasses if success or None if error
         """
-        return self._check_get_response(response=response, dataclass_type=dataclass_type)
+        return self._check_get_response(
+            response=response, dataclass_schema=dataclass_schema
+        )
 
     # GET methods
 
-    def get_workspaces(self) -> Union[None, List[Msf.Workspace]]:
+    def get_workspaces(self) -> Optional[List[Msf.Workspace]]:
         """
         Get list of MSF workspaces
         @return: None if error or List of MSF workspaces example: [Msf.Workspace(id=1,
@@ -204,9 +223,11 @@ class MsfRestApi:
                                                                                  import_fingerprint=False)]
         """
         response = self._session.get(self._api_url + self._endpoints.workspaces)
-        return self._check_get_response(response=response, dataclass_type=Msf.Workspace)
+        return self._check_get_response(
+            response=response, dataclass_schema=Msf.Workspace.Schema
+        )
 
-    def get_hosts(self, workspace: str = 'default') -> Union[None, List[Msf.Host]]:
+    def get_hosts(self, workspace: str = "default") -> Optional[List[Msf.Host]]:
         """
         Get hosts from MSF workspace
         @param workspace: MSF workspace name string, example: "default"
@@ -234,10 +255,14 @@ class MsfRestApi:
                                                                    exploit_attempt_count=0, cred_count=0,
                                                                    detected_arch='', os_family='posix')]
         """
-        response = self._session.get(self._api_url + self._endpoints.hosts + '?workspace=' + workspace)
-        return self._check_get_response(response=response, dataclass_type=Msf.Host)
+        response = self._session.get(
+            self._api_url + self._endpoints.hosts + "?workspace=" + workspace
+        )
+        return self._check_get_response(
+            response=response, dataclass_schema=Msf.Host.Schema
+        )
 
-    def get_services(self, workspace: str = 'default') -> Union[None, List[Msf.Service]]:
+    def get_services(self, workspace: str = "default") -> Optional[List[Msf.Service]]:
         """
         Get services from MSF workspace
         @param workspace: MSF workspace name string, example: "default"
@@ -256,10 +281,14 @@ class MsfRestApi:
                      port=12345, proto='tcp', state='open', name='http',
                      updated_at='2021-04-15T13:45:11.577Z', info='Unit test')]
         """
-        response = self._session.get(self._api_url + self._endpoints.services + '?workspace=' + workspace)
-        return self._check_get_response(response=response, dataclass_type=Msf.Service)
+        response = self._session.get(
+            self._api_url + self._endpoints.services + "?workspace=" + workspace
+        )
+        return self._check_get_response(
+            response=response, dataclass_schema=Msf.Service.Schema
+        )
 
-    def get_vulns(self, workspace: str = 'default') -> Union[None, List[Msf.Vuln]]:
+    def get_vulns(self, workspace: str = "default") -> Optional[List[Msf.Vuln]]:
         """
         Get vulnerabilities from MSF workspace
         @param workspace: MSF workspace name string, example: "default"
@@ -293,10 +322,14 @@ class MsfRestApi:
                          'updated_at': '2021-04-15T12:48:48.939Z'}],
                   module_refs=[])]
         """
-        response = self._session.get(self._api_url + self._endpoints.vulns + '?workspace=' + workspace)
-        return self._check_get_response(response=response, dataclass_type=Msf.Vuln)
+        response = self._session.get(
+            self._api_url + self._endpoints.vulns + "?workspace=" + workspace
+        )
+        return self._check_get_response(
+            response=response, dataclass_schema=Msf.Vuln.Schema
+        )
 
-    def get_loots(self, workspace: str = 'default') -> Union[None, List[Msf.Loot]]:
+    def get_loots(self, workspace: str = "default") -> Optional[List[Msf.Loot]]:
         """
         Get loots from MSF workspace
         @param workspace: MSF workspace name string, example: "default"
@@ -319,10 +352,14 @@ class MsfRestApi:
                  name='/tmp/unit.test', info='Unit test file',
                  module_run_id=None)]
         """
-        response = self._session.get(self._api_url + self._endpoints.loots + '?workspace=' + workspace)
-        return self._check_get_response(response=response, dataclass_type=Msf.Loot)
+        response = self._session.get(
+            self._api_url + self._endpoints.loots + "?workspace=" + workspace
+        )
+        return self._check_get_response(
+            response=response, dataclass_schema=Msf.Loot.Schema
+        )
 
-    def get_notes(self, workspace: str = 'default') -> Union[None, List[Msf.Note]]:
+    def get_notes(self, workspace: str = "default") -> Optional[List[Msf.Note]]:
         """
         Get notes from MSF workspace
         @param workspace: MSF workspace name string, example: "default"
@@ -344,10 +381,14 @@ class MsfRestApi:
                   data='Unit test host comment',
                   critical=None, seen=None)]
         """
-        response = self._session.get(self._api_url + self._endpoints.notes + '?workspace=' + workspace)
-        return self._check_get_response(response=response, dataclass_type=Msf.Note)
+        response = self._session.get(
+            self._api_url + self._endpoints.notes + "?workspace=" + workspace
+        )
+        return self._check_get_response(
+            response=response, dataclass_schema=Msf.Note.Schema
+        )
 
-    def get_creds(self, workspace: str = 'default') -> Union[None, List[Msf.Cred]]:
+    def get_creds(self, workspace: str = "default") -> Optional[List[Msf.Cred]]:
         """
         Get credentials from MSF workspace
         @param workspace: MSF workspace name string, example: "default"
@@ -381,10 +422,14 @@ class MsfRestApi:
                                    updated_at='2021-04-15T18:23:58.873Z',
                                    type='Metasploit::Credential::Origin::Service'))]
         """
-        response = self._session.get(self._api_url + self._endpoints.creds + '?workspace=' + workspace)
-        return self._check_get_response(response=response, dataclass_type=Msf.Cred)
+        response = self._session.get(
+            self._api_url + self._endpoints.creds + "?workspace=" + workspace
+        )
+        return self._check_get_response(
+            response=response, dataclass_schema=Msf.Cred.Schema
+        )
 
-    def get_logins(self) -> Union[None, List[Msf.Login]]:
+    def get_logins(self) -> Optional[List[Msf.Login]]:
         """
         Get MSF logins list
         @return: None if error or list of logins example:
@@ -394,9 +439,11 @@ class MsfRestApi:
                    updated_at='2021-04-12T17:19:49.950Z')]
         """
         response = self._session.get(self._api_url + self._endpoints.logins)
-        return self._check_get_response(response=response, dataclass_type=Msf.Login)
+        return self._check_get_response(
+            response=response, dataclass_schema=Msf.Login.Schema
+        )
 
-    def get_all_data(self, workspace: str = 'default') -> MsfData:
+    def get_all_data(self, workspace: str = "default") -> MsfData:
         """
         Get all MSF data in workspace
         @param workspace: MSF workspace name string, example: "default"
@@ -414,7 +461,9 @@ class MsfRestApi:
         msf_data.logins = self.get_logins()
         return msf_data
 
-    def get_workspace_id_by_name(self, workspace_name: str = 'default') -> Union[int, None]:
+    def get_workspace_id_by_name(
+        self, workspace_name: str = "default"
+    ) -> Optional[int]:
         """
         Get MSF workspace ID by name
         @param workspace_name: MSF workspace name string, example: "default"
@@ -426,7 +475,7 @@ class MsfRestApi:
                 return workspace.id
         return None
 
-    def get_workspace_by_id(self, workspace_id: int = 1) -> Union[None, Msf.Workspace]:
+    def get_workspace_by_id(self, workspace_id: int = 1) -> Optional[Msf.Workspace]:
         """
         Get MSF workspace by ID
         @param workspace_id: MSF workspace ID integer, example: 1
@@ -442,8 +491,9 @@ class MsfRestApi:
                 return workspace
         return None
 
-    def get_host_by_id(self, workspace: str = 'default',
-                       host_id: int = 1) -> Union[None, Msf.Host]:
+    def get_host_by_id(
+        self, workspace: str = "default", host_id: int = 1
+    ) -> Optional[Msf.Host]:
         """
         Get MSF host information by ID
         @param workspace: MSF workspace name string, example: "default"
@@ -467,8 +517,9 @@ class MsfRestApi:
                 return host
         return None
 
-    def get_service_by_id(self, workspace: str = 'default',
-                          service_id: int = 1) -> Union[None, Msf.Service]:
+    def get_service_by_id(
+        self, workspace: str = "default", service_id: int = 1
+    ) -> Optional[Msf.Service]:
         """
         Get MSF service information by ID
         @param workspace: MSF workspace name string, example: "default"
@@ -494,8 +545,9 @@ class MsfRestApi:
                 return service
         return None
 
-    def get_vuln_by_id(self, workspace: str = 'default',
-                       vuln_id: int = 1) -> Union[None, Msf.Vuln]:
+    def get_vuln_by_id(
+        self, workspace: str = "default", vuln_id: int = 1
+    ) -> Optional[Msf.Vuln]:
         """
         Get MSF vulnerability information by ID
         @param workspace: MSF workspace name string, example: "default"
@@ -536,8 +588,9 @@ class MsfRestApi:
                 return vuln
         return None
 
-    def get_loot_by_id(self, workspace: str = 'default',
-                       loot_id: int = 1) -> Union[None, Msf.Loot]:
+    def get_loot_by_id(
+        self, workspace: str = "default", loot_id: int = 1
+    ) -> Optional[Msf.Loot]:
         """
         Get MSF loot information by ID
         @param workspace: MSF workspace name string, example: "default"
@@ -567,8 +620,9 @@ class MsfRestApi:
                 return loot
         return None
 
-    def get_note_by_id(self, workspace: str = 'default',
-                       note_id: int = 1) -> Union[None, Msf.Note]:
+    def get_note_by_id(
+        self, workspace: str = "default", note_id: int = 1
+    ) -> Optional[Msf.Note]:
         """
         Get MSF note information by ID
         @param workspace: MSF workspace name string, example: "default"
@@ -597,8 +651,9 @@ class MsfRestApi:
                 return note
         return None
 
-    def get_cred_by_id(self, workspace: str = 'default',
-                       cred_id: int = 1) -> Union[None, Msf.Cred]:
+    def get_cred_by_id(
+        self, workspace: str = "default", cred_id: int = 1
+    ) -> Optional[Msf.Cred]:
         """
         Get MSF cred by ID
         @param workspace: MSF workspace name string, example: "default"
@@ -639,7 +694,7 @@ class MsfRestApi:
                 return cred
         return None
 
-    def get_login_by_id(self, login_id: int = 1) -> Union[None, Msf.Login]:
+    def get_login_by_id(self, login_id: int = 1) -> Optional[Msf.Login]:
         """
         Get MSF workspace by ID
         @param login_id: MSF login ID integer, example: 1
@@ -657,76 +712,7 @@ class MsfRestApi:
 
     # POST methods
 
-    @staticmethod
-    def _dataclass_to_dict(dataclass_object: dataclass) -> Dict:
-        """
-        Make dictionary for json data in POST requests
-        :param dataclass_object: Dataclass object
-        :return: Dictionary
-        """
-        dictionary: Dict = dataclass_object.__dict__.copy()
-
-        if isinstance(dataclass_object, Msf.Host):
-            if 'host' in dictionary:
-                if dictionary['host'] is None and dictionary['address'] is not None:
-                    dictionary['host'] = dataclass_object.address
-            del (dictionary['address'])
-
-        if isinstance(dataclass_object, Msf.Login):
-            dictionary['core'] = {'id': dataclass_object.core_id}
-            del (dictionary['core_id'])
-            del (dictionary['public'])
-            del (dictionary['private'])
-
-        if isinstance(dataclass_object, Msf.Loot):
-            if dataclass_object.port == -1:
-                dictionary['port'] = None
-            if dataclass_object.path is None:
-                dictionary['path'] = 'path'
-
-        if isinstance(dataclass_object, Msf.Note):
-            if dataclass_object.port == -1:
-                dictionary['port'] = None
-            if dataclass_object.vuln_id == -1:
-                dictionary['vuln_id'] = None
-
-        if isinstance(dataclass_object, Msf.Cred):
-            if dataclass_object.origin_type is None:
-                dictionary['origin_type'] = 'service'
-
-        if 'workspace_id' in dictionary and 'workspace' in dictionary:
-            del (dictionary['workspace_id'])
-
-        if 'created_at' in dictionary: del (dictionary['created_at'])
-        if 'cred_count' in dictionary: del (dictionary['cred_count'])
-        if 'exploit_attempt_count' in dictionary: del (dictionary['exploit_attempt_count'])
-        if 'exploited_at' in dictionary: del (dictionary['exploited_at'])
-        if 'host_detail_count' in dictionary: del (dictionary['host_detail_count'])
-        if 'host_id' in dictionary: del (dictionary['host_id'])
-        if 'id' in dictionary: del (dictionary['id'])
-        if 'logins' in dictionary: del (dictionary['logins'])
-        if 'logins_count' in dictionary: del (dictionary['logins_count'])
-        if 'module_refs' in dictionary: del (dictionary['module_refs'])
-        if 'module_run_id' in dictionary: del (dictionary['module_run_id'])
-        if 'note_count' in dictionary: del (dictionary['note_count'])
-        if 'origin' in dictionary: del (dictionary['origin'])
-        if 'origin_id' in dictionary: del (dictionary['origin_id'])
-        if 'owner_id' in dictionary: del (dictionary['owner_id'])
-        if 'private' in dictionary: del (dictionary['private'])
-        if 'private_id' in dictionary: del (dictionary['private_id'])
-        if 'public' in dictionary: del (dictionary['public'])
-        if 'public_id' in dictionary: del (dictionary['public_id'])
-        if 'realm_id' in dictionary: del (dictionary['realm_id'])
-        if 'service_count' in dictionary: del (dictionary['service_count'])
-        if 'service_id' in dictionary: del (dictionary['service_id'])
-        if 'updated_at' in dictionary: del (dictionary['updated_at'])
-        if 'vuln_attempt_count' in dictionary: del (dictionary['vuln_attempt_count'])
-        if 'vuln_count' in dictionary: del (dictionary['vuln_count'])
-        if 'vuln_detail_count' in dictionary: del (dictionary['vuln_detail_count'])
-
-        return dictionary
-
-    def create_workspace(self, workspace: Msf.Workspace) -> Union[None, int]:
+    def create_workspace(self, workspace: Msf.Workspace) -> Optional[int]:
         """
         Create workspace
         :param workspace: Workspace, example: [Msf.Workspace(id=-1, name='my_cool_workspace',
@@ -737,11 +723,13 @@ class MsfRestApi:
                                                              import_fingerprint=False)]
         :return: None if error or created workspace id, example: 123
         """
-        response = self._session.post(self._api_url + self._endpoints.workspaces,
-                                      json=self._dataclass_to_dict(workspace))
+        response = self._session.post(
+            self._api_url + self._endpoints.workspaces,
+            json=Msf.Workspace.Schema().dump(workspace),
+        )
         return self._check_create_response(response)
 
-    def create_host(self, host: Msf.Host) -> Union[None, int]:
+    def create_host(self, host: Msf.Host) -> Optional[int]:
         """
         Create host in MSF workspace
         @param host: Host, example - Msf.Host(id=-1, workspace='unit_test_workspace',
@@ -756,8 +744,9 @@ class MsfRestApi:
                                               os_family='posix')
         @return: Created host id or None if error
         """
-        response = self._session.post(self._api_url + self._endpoints.hosts,
-                                      json=self._dataclass_to_dict(host))
+        response = self._session.post(
+            self._api_url + self._endpoints.hosts, json=Msf.Host.Schema().dump(host)
+        )
         return self._check_create_response(response)
 
     def create_hosts(self, hosts: List[Msf.Host]) -> bool:
@@ -780,7 +769,7 @@ class MsfRestApi:
                 return False
         return True
 
-    def create_service(self, service: Msf.Service) -> Union[None, int]:
+    def create_service(self, service: Msf.Service) -> Optional[int]:
         """
         Create service in MSF workspace
         @param service: Service, example - Msf.Service(id=-1, workspace='unit_test_workspace',
@@ -790,8 +779,10 @@ class MsfRestApi:
                                                        info='Unit test')
         @return: Created service id or None if error
         """
-        response = self._session.post(self._api_url + self._endpoints.services,
-                                      json=self._dataclass_to_dict(service))
+        response = self._session.post(
+            self._api_url + self._endpoints.services,
+            json=Msf.Service.Schema().dump(service),
+        )
         return self._check_create_response(response)
 
     def create_services(self, services: List[Msf.Service]) -> bool:
@@ -809,7 +800,7 @@ class MsfRestApi:
                 return False
         return True
 
-    def create_vuln(self, vuln: Msf.Vuln) -> Union[None, int]:
+    def create_vuln(self, vuln: Msf.Vuln) -> Optional[int]:
         """
         Create vuln in MSF workspace
         @param vuln: Vuln, example - Msf.Vuln(id=-1, workspace='unit_test_workspace', host='192.168.1.1',
@@ -821,8 +812,9 @@ class MsfRestApi:
                                               module_refs=None)
         @return: Created vuln id or None if error
         """
-        response = self._session.post(self._api_url + self._endpoints.vulns,
-                                      json=self._dataclass_to_dict(vuln))
+        response = self._session.post(
+            self._api_url + self._endpoints.vulns, json=Msf.Vuln.Schema().dump(vuln)
+        )
         return self._check_create_response(response)
 
     def create_vulns(self, vulns: List[Msf.Vuln]) -> bool:
@@ -842,7 +834,7 @@ class MsfRestApi:
                 return False
         return True
 
-    def create_loot(self, loot: Msf.Loot) -> Union[None, int]:
+    def create_loot(self, loot: Msf.Loot) -> Optional[int]:
         """
         Create loot in MSF workspace
         @param loot: Loot, example - Msf.Loot(id=-1, workspace='unit_test_workspace', workspace_id=-1,
@@ -852,8 +844,9 @@ class MsfRestApi:
                                               name='/tmp/unit.test', info='Unit test file', module_run_id=None)
         @return: Created loot id or None if error
         """
-        response = self._session.post(self._api_url + self._endpoints.loots,
-                                      json=self._dataclass_to_dict(loot))
+        response = self._session.post(
+            self._api_url + self._endpoints.loots, json=Msf.Loot.Schema().dump(loot)
+        )
         return self._check_create_response(response)
 
     def create_loots(self, loots: List[Msf.Loot]) -> bool:
@@ -871,7 +864,7 @@ class MsfRestApi:
                 return False
         return True
 
-    def create_note(self, note: Msf.Note) -> Union[None, int]:
+    def create_note(self, note: Msf.Note) -> Optional[int]:
         """
         Create note in MSF workspace
         @param note: Note, example - Msf.Note(id=-1, workspace='unit_test_workspace', workspace_id=-1,
@@ -880,8 +873,9 @@ class MsfRestApi:
                                               data='Unit test host comment', critical=True, seen=True)
         @return: Created note id or None if error
         """
-        response = self._session.post(self._api_url + self._endpoints.notes,
-                                      json=self._dataclass_to_dict(note))
+        response = self._session.post(
+            self._api_url + self._endpoints.notes, json=Msf.Note.Schema().dump(note)
+        )
         return self._check_create_response(response)
 
     def create_notes(self, notes: List[Msf.Note]) -> bool:
@@ -898,7 +892,7 @@ class MsfRestApi:
                 return False
         return True
 
-    def create_cred(self, cred: Msf.Cred) -> Union[None, int]:
+    def create_cred(self, cred: Msf.Cred) -> Optional[int]:
         """
         Create cred in MSF workspace
         @param cred: Cred, example - Msf.Cred(id=-1, workspace_id=327, username='UnitTestUser',
@@ -911,8 +905,9 @@ class MsfRestApi:
                                               logins=None, public=None, private=None, origin=None)
         @return: Created cred id or None if error
         """
-        response = self._session.post(self._api_url + self._endpoints.creds,
-                                      json=self._dataclass_to_dict(cred))
+        response = self._session.post(
+            self._api_url + self._endpoints.creds, json=Msf.Cred.Schema().dump(cred)
+        )
         return self._check_create_response(response)
 
     def create_creds(self, creds: List[Msf.Cred]) -> bool:
@@ -933,7 +928,7 @@ class MsfRestApi:
                 return False
         return True
 
-    def create_login(self, login: Msf.Login) -> Union[None, int]:
+    def create_login(self, login: Msf.Login) -> Optional[int]:
         """
         Create cred in MSF workspace
         @param login: Login, example - Msf.Login(id=-1, workspace=None, workspace_id=317, core_id=293,
@@ -944,8 +939,9 @@ class MsfRestApi:
                                                  created_at=None, updated_at=None)
         @return: Created login id or None if error
         """
-        response = self._session.post(self._api_url + self._endpoints.logins,
-                                      json=self._dataclass_to_dict(login))
+        response = self._session.post(
+            self._api_url + self._endpoints.logins, json=Msf.Login.Schema().dump(login)
+        )
         return self._check_create_response(response)
 
     def create_logins(self, logins: List[Msf.Login]) -> bool:
@@ -966,7 +962,7 @@ class MsfRestApi:
 
     # DELETE methods
 
-    def delete_logins(self, ids: List[int]) -> Union[None, List[Msf.Login]]:
+    def delete_logins(self, ids: List[int]) -> Optional[List[Msf.Login]]:
         """
         Delete logins by identifiers
         @param ids: List of logins identifiers, example: [157]
@@ -976,10 +972,14 @@ class MsfRestApi:
                    access_level=None, public=None, private=None, created_at='2021-04-12T17:19:49.950Z',
                    updated_at='2021-04-12T17:19:49.950Z')]
         """
-        response = self._session.delete(self._api_url + self._endpoints.logins, json={'ids': ids})
-        return self._check_delete_response(response=response, dataclass_type=Msf.Login)
+        response = self._session.delete(
+            self._api_url + self._endpoints.logins, json={"ids": ids}
+        )
+        return self._check_delete_response(
+            response=response, dataclass_schema=Msf.Login.Schema
+        )
 
-    def delete_creds(self, ids: List[int]) -> Union[None, List[Msf.Cred]]:
+    def delete_creds(self, ids: List[int]) -> Optional[List[Msf.Cred]]:
         """
         Delete credentials by identifiers
         @param ids: List of credentials identifiers, example: [303]
@@ -1013,10 +1013,14 @@ class MsfRestApi:
                                    updated_at='2021-04-15T18:23:58.873Z',
                                    type='Metasploit::Credential::Origin::Service'))]
         """
-        response = self._session.delete(self._api_url + self._endpoints.creds, json={'ids': ids})
-        return self._check_delete_response(response=response, dataclass_type=Msf.Cred)
+        response = self._session.delete(
+            self._api_url + self._endpoints.creds, json={"ids": ids}
+        )
+        return self._check_delete_response(
+            response=response, dataclass_schema=Msf.Cred.Schema
+        )
 
-    def delete_notes(self, ids: List[int]) -> Union[None, List[Msf.Note]]:
+    def delete_notes(self, ids: List[int]) -> Optional[List[Msf.Note]]:
         """
         Delete notes by identifiers
         @param ids: List of notes identifiers, example: [14]
@@ -1038,10 +1042,14 @@ class MsfRestApi:
                   data='Unit test host comment',
                   critical=None, seen=None)]
         """
-        response = self._session.delete(self._api_url + self._endpoints.notes, json={'ids': ids})
-        return self._check_delete_response(response=response, dataclass_type=Msf.Note)
+        response = self._session.delete(
+            self._api_url + self._endpoints.notes, json={"ids": ids}
+        )
+        return self._check_delete_response(
+            response=response, dataclass_schema=Msf.Note.Schema
+        )
 
-    def delete_loots(self, ids: List[int]) -> Union[None, List[Msf.Loot]]:
+    def delete_loots(self, ids: List[int]) -> Optional[List[Msf.Loot]]:
         """
         Delete loots by identifiers
         @param ids: List of loots identifiers, example: [271]
@@ -1064,10 +1072,14 @@ class MsfRestApi:
                  name='/tmp/unit.test', info='Unit test file',
                  module_run_id=None)]
         """
-        response = self._session.delete(self._api_url + self._endpoints.loots, json={'ids': ids})
-        return self._check_delete_response(response=response, dataclass_type=Msf.Loot)
+        response = self._session.delete(
+            self._api_url + self._endpoints.loots, json={"ids": ids}
+        )
+        return self._check_delete_response(
+            response=response, dataclass_schema=Msf.Loot.Schema
+        )
 
-    def delete_vulns(self, ids: List[int]) -> Union[None, List[Msf.Vuln]]:
+    def delete_vulns(self, ids: List[int]) -> Optional[List[Msf.Vuln]]:
         """
         Delete vulnerabilities by identifiers
         @param ids: List of vulnerabilities identifiers, example: [157]
@@ -1101,10 +1113,14 @@ class MsfRestApi:
                          'updated_at': '2021-04-15T12:48:48.939Z'}],
                   module_refs=[])]
         """
-        response = self._session.delete(self._api_url + self._endpoints.vulns, json={'ids': ids})
-        return self._check_delete_response(response=response, dataclass_type=Msf.Vuln)
+        response = self._session.delete(
+            self._api_url + self._endpoints.vulns, json={"ids": ids}
+        )
+        return self._check_delete_response(
+            response=response, dataclass_schema=Msf.Vuln.Schema
+        )
 
-    def delete_services(self, ids: List[int]) -> Union[None, List[Msf.Service]]:
+    def delete_services(self, ids: List[int]) -> Optional[List[Msf.Service]]:
         """
         Delete services by identifiers
         @param ids: List of services identifiers, example: [22]
@@ -1123,10 +1139,14 @@ class MsfRestApi:
                      port=12345, proto='tcp', state='open', name='http',
                      updated_at='2021-04-15T13:45:11.577Z', info='Unit test')]
         """
-        response = self._session.delete(self._api_url + self._endpoints.services, json={'ids': ids})
-        return self._check_delete_response(response=response, dataclass_type=Msf.Service)
+        response = self._session.delete(
+            self._api_url + self._endpoints.services, json={"ids": ids}
+        )
+        return self._check_delete_response(
+            response=response, dataclass_schema=Msf.Service.Schema
+        )
 
-    def delete_hosts(self, ids: List[int]) -> Union[None, List[Msf.Host]]:
+    def delete_hosts(self, ids: List[int]) -> Optional[List[Msf.Host]]:
         """
         Delete hosts by identifiers
         @param ids: List of hosts identifiers, example: [157]
@@ -1154,10 +1174,14 @@ class MsfRestApi:
                                                                    exploit_attempt_count=0, cred_count=0,
                                                                    detected_arch='', os_family='posix')]
         """
-        response = self._session.delete(self._api_url + self._endpoints.hosts, json={'ids': ids})
-        return self._check_delete_response(response=response, dataclass_type=Msf.Host)
+        response = self._session.delete(
+            self._api_url + self._endpoints.hosts, json={"ids": ids}
+        )
+        return self._check_delete_response(
+            response=response, dataclass_schema=Msf.Host.Schema
+        )
 
-    def delete_workspaces(self, ids: List[int]) -> Union[None, List[Msf.Workspace]]:
+    def delete_workspaces(self, ids: List[int]) -> Optional[List[Msf.Workspace]]:
         """
         Delete workspaces by identifiers
         @param ids: List of hosts identifiers, example: [157]
@@ -1171,10 +1195,14 @@ class MsfRestApi:
                                                                                  limit_to_network=False,
                                                                                  import_fingerprint=False)]
         """
-        response = self._session.delete(self._api_url + self._endpoints.workspaces, json={'ids': ids})
-        return self._check_delete_response(response=response, dataclass_type=Msf.Workspace)
+        response = self._session.delete(
+            self._api_url + self._endpoints.workspaces, json={"ids": ids}
+        )
+        return self._check_delete_response(
+            response=response, dataclass_schema=Msf.Workspace.Schema
+        )
 
-    def delete_workspace(self, workspace_name: str) -> Union[None, Msf.Workspace]:
+    def delete_workspace(self, workspace_name: str) -> Optional[Msf.Workspace]:
         """
         Delete workspace by name
         @param workspace_name: Workspace name string, example: 'msf_workspace'
@@ -1188,7 +1216,9 @@ class MsfRestApi:
                                                                                  limit_to_network=False,
                                                                                  import_fingerprint=False)
         """
-        workspace_id: Union[None, int] = self.get_workspace_id_by_name(workspace_name=workspace_name)
+        workspace_id: Optional[int] = self.get_workspace_id_by_name(
+            workspace_name=workspace_name
+        )
         if workspace_id is None:
             return None
         else:
@@ -1198,32 +1228,58 @@ class MsfRestApi:
 # Main function
 def main() -> None:
     # Parse script arguments
-    parser: ArgumentParser = ArgumentParser(description='MSF REST API console client')
+    parser: ArgumentParser = ArgumentParser(description="MSF REST API console client")
 
     # MSF arguments
-    parser.add_argument('-u', '--api_url', type=str, help='set MSF REST API server URL', required=True)
-    parser.add_argument('-k', '--api_key', type=str, help='set MSF REST API key', required=True)
-    parser.add_argument('-w', '--workspace', type=str, help='set MSF Workspace name', default='default')
+    parser.add_argument(
+        "-u", "--api_url", type=str, help="set MSF REST API server URL", required=True
+    )
+    parser.add_argument(
+        "-k", "--api_key", type=str, help="set MSF REST API key", required=True
+    )
+    parser.add_argument(
+        "-w", "--workspace", type=str, help="set MSF Workspace name", default="default"
+    )
 
     # Get DB objects
-    parser.add_argument('--get_workspaces', action='store_true', help='get MSF workspaces list')
-    parser.add_argument('--get_hosts', action='store_true', help='get MSF hosts list for workspace')
-    parser.add_argument('--get_services', action='store_true', help='get MSF services list for workspace')
-    parser.add_argument('--get_vulns', action='store_true', help='get MSF vulnerabilities list for workspace')
-    parser.add_argument('--get_loots', action='store_true', help='get MSF loots list for workspace')
-    parser.add_argument('--get_notes', action='store_true', help='get MSF notes list for workspace')
-    parser.add_argument('--get_creds', action='store_true', help='get MSF creds list for workspace')
-    parser.add_argument('--get_logins', action='store_true', help='get MSF logins list')
-    parser.add_argument('--get_all', action='store_true', help='get MSF all data for workspace')
+    parser.add_argument(
+        "--get_workspaces", action="store_true", help="get MSF workspaces list"
+    )
+    parser.add_argument(
+        "--get_hosts", action="store_true", help="get MSF hosts list for workspace"
+    )
+    parser.add_argument(
+        "--get_services",
+        action="store_true",
+        help="get MSF services list for workspace",
+    )
+    parser.add_argument(
+        "--get_vulns",
+        action="store_true",
+        help="get MSF vulnerabilities list for workspace",
+    )
+    parser.add_argument(
+        "--get_loots", action="store_true", help="get MSF loots list for workspace"
+    )
+    parser.add_argument(
+        "--get_notes", action="store_true", help="get MSF notes list for workspace"
+    )
+    parser.add_argument(
+        "--get_creds", action="store_true", help="get MSF creds list for workspace"
+    )
+    parser.add_argument("--get_logins", action="store_true", help="get MSF logins list")
+    parser.add_argument(
+        "--get_all", action="store_true", help="get MSF all data for workspace"
+    )
 
     # Proxy
-    parser.add_argument('-p', '--proxy', type=str, help='Set proxy URL', default=None)
+    parser.add_argument("-p", "--proxy", type=str, help="Set proxy URL", default=None)
     args = parser.parse_args()
 
     # Init MsfRestApi
-    msf_rest_api: MsfRestApi = MsfRestApi(api_url=args.api_url,
-                                          api_key=args.api_key,
-                                          proxy=args.proxy)
+    msf_rest_api: MsfRestApi = MsfRestApi(
+        api_url=args.api_url, api_key=args.api_key, proxy=args.proxy
+    )
 
     # Get DB objects
     if args.get_workspaces:
@@ -1268,36 +1324,36 @@ def main() -> None:
 
     if args.get_all:
         msf_data: MsfData = msf_rest_api.get_all_data(workspace=args.workspace)
-        print(f'MSF workspace: {msf_data.workspace}')
+        print(f"MSF workspace: {msf_data.workspace}")
 
-        print('Workspaces:')
+        print("Workspaces:")
         for _object in msf_data.workspaces:
             print(_object)
 
-        print('Hosts:')
+        print("Hosts:")
         for _object in msf_data.hosts:
             print(_object)
 
-        print('Services:')
+        print("Services:")
         for _object in msf_data.services:
             print(_object)
 
-        print('Vulnerabilities:')
+        print("Vulnerabilities:")
         for _object in msf_data.vulns:
             print(_object)
 
-        print('Loots:')
+        print("Loots:")
         for _object in msf_data.loots:
             print(_object)
 
-        print('Notes:')
+        print("Notes:")
         for _object in msf_data.notes:
             print(_object)
 
-        print('Credentials:')
+        print("Credentials:")
         for _object in msf_data.creds:
             print(_object)
 
-        print('Logins:')
+        print("Logins:")
         for _object in msf_data.logins:
             print(_object)

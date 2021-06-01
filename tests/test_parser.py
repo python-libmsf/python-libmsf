@@ -10,18 +10,18 @@ Copyright 2021, Python Metasploit Library
 from unittest import TestCase
 from test_variables import MsfVariablesForTest
 from libmsf.parser import MsfParser
-from libmsf.msf import Msf, MsfData
+from libmsf import Msf, MsfData
 from typing import List
 
 # Authorship information
-__author__ = 'Vladimir Ivanov'
-__copyright__ = 'Copyright 2021, Python Metasploit Library'
-__credits__ = ['']
-__license__ = 'MIT'
-__version__ = '0.1.2'
-__maintainer__ = 'Vladimir Ivanov'
-__email__ = 'ivanov.vladimir.mail@gmail.com'
-__status__ = 'Development'
+__author__ = "Vladimir Ivanov"
+__copyright__ = "Copyright 2021, Python Metasploit Library"
+__credits__ = [""]
+__license__ = "MIT"
+__version__ = "0.2.1"
+__maintainer__ = "Vladimir Ivanov"
+__email__ = "ivanov.vladimir.mail@gmail.com"
+__status__ = "Development"
 
 # Global variables
 msf_variables: MsfVariablesForTest = MsfVariablesForTest()
@@ -31,11 +31,11 @@ msf_parser: MsfParser = MsfParser()
 # Class MsfRestApiTest
 class MsfParserApiTest(TestCase):
 
-    msf_data: MsfData = msf_parser.parse_file(file_name='msf_db_export.xml')
+    msf_data: MsfData = msf_parser.parse_file(file_name="msf_db_export.xml")
 
     # Get workspaces
     def test01_get_workspaces(self):
-        self.assertIsNone(self.msf_data.workspaces)
+        self.assertListEqual(self.msf_data.workspaces, [])
 
     # Get hosts
     def test02_get_hosts(self):
@@ -92,7 +92,7 @@ class MsfParserApiTest(TestCase):
     # Get loots
     def test05_get_loots(self):
         # Normal
-        self.assertIsNone(self.msf_data.loots)
+        self.assertListEqual(self.msf_data.loots, [])
 
     # Get notes
     def test06_get_notes(self):
@@ -109,9 +109,9 @@ class MsfParserApiTest(TestCase):
     # Get creds
     def test07_get_creds(self):
         # Normal
-        self.assertIsNone(self.msf_data.creds)
+        self.assertListEqual(self.msf_data.creds, [])
 
     # Get logins
     def test08_get_logins(self):
         # Normal
-        self.assertIsNone(self.msf_data.logins)
+        self.assertListEqual(self.msf_data.logins, [])

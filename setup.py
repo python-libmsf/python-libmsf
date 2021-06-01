@@ -10,14 +10,14 @@ Copyright 2021, Python Metasploit Library
 from setuptools import setup, find_packages
 
 # Authorship information
-__author__ = 'Vladimir Ivanov'
-__copyright__ = 'Copyright 2021, Python Metasploit Library'
-__credits__ = ['']
-__license__ = 'MIT'
-__version__ = '0.1.2'
-__maintainer__ = 'Vladimir Ivanov'
-__email__ = 'ivanov.vladimir.mail@gmail.com'
-__status__ = 'Development'
+__author__ = "Vladimir Ivanov"
+__copyright__ = "Copyright 2021, Python Metasploit Library"
+__credits__ = [""]
+__license__ = "MIT"
+__version__ = "0.2.1"
+__maintainer__ = "Vladimir Ivanov"
+__email__ = "ivanov.vladimir.mail@gmail.com"
+__status__ = "Development"
 
 # Setup
 with open("README.md", "r") as readme:
@@ -49,18 +49,15 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Topic :: Education",
-        "Topic :: Security"
+        "Topic :: Security",
     ],
-    install_requires=[
-        "requests",
-        "urllib3",
-    ],
+    install_requires=["requests", "urllib3", "dataclasses", "marshmallow"],
     entry_points={
-        'console_scripts': [
-            'msf_rest_cli=libmsf.rest:main',
-            'msf_parser_cli=libmsf.parser:main'
+        "console_scripts": [
+            "msf_rest_cli=libmsf.rest:main",
+            "msf_parser_cli=libmsf.parser:main",
         ],
     },
-    python_requires='>=3.6',
+    python_requires=">=3.6",
     include_package_data=True,
 )

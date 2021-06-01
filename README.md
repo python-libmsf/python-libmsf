@@ -36,7 +36,7 @@ With MsfRestApi you can work with Metasploit REST API objects such as:
 MsfRestApi easy to use:
 
 ```shell
->>> from libmsf.msf import Msf
+>>> from libmsf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> msf_rest_api = MsfRestApi(api_key='cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460', api_url='https://localhost:5443')
 >>> workspace: Msf.Workspace = Msf.Workspace(name='test_workspace')
@@ -52,7 +52,7 @@ With MsfParser you can parse Metasploit exported files
 MsfParser easy to use:
 
 ```shell
->>> from libmsf.msf import MsfData
+>>> from libmsf import MsfData
 >>> from libmsf.parser import MsfParser
 >>>
 >>> msf_parser: MsfParser = MsfParser()
@@ -82,6 +82,7 @@ MsfParser easy to use:
  - [requests](https://pypi.org/project/requests/)
  - [urllib3](https://pypi.org/project/urllib3/)
  - [dataclasses](https://pypi.org/project/dataclasses/)
+ - [marshmallow](https://pypi.org/project/marshmallow/)
 
 ## Installing
 
@@ -170,7 +171,7 @@ Metasploit web service swagger page: `https://localhost:5443/api/v1/api-docs`
 ### Workspaces
 
 ```python
-from libmsf.msf import Msf
+from libmsf import Msf
 from libmsf.rest import MsfRestApi
 from typing import List
 
@@ -197,7 +198,7 @@ Create workspace:
 <details><summary>Example:</summary>
 
 <pre language="shell"><code class="language-shell">
->>> from libmsf.msf import Msf
+>>> from libmsf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
 >>>
@@ -252,7 +253,7 @@ Removed workspace: Msf.Workspace(id=210, name='test_workspace', created_at='2021
 ### Hosts
 
 ```python
-from libmsf.msf import Msf
+from libmsf import Msf
 from libmsf.rest import MsfRestApi
 from typing import List
 
@@ -301,7 +302,7 @@ Create host:
   <summary>Example:</summary>
 
 <pre lang="shell"><code>
->>> from libmsf.msf import Msf
+>>> from libmsf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
 >>>
@@ -375,7 +376,7 @@ Removed hosts: [Msf.Host(id=220, workspace=None, created_at='2021-04-16T13:03:43
 ### Services
 
 ```python
-from libmsf.msf import Msf
+from libmsf import Msf
 from libmsf.rest import MsfRestApi
 from typing import List
 
@@ -415,7 +416,7 @@ Create service:
   <summary>Example:</summary>
 
 <pre lang="shell"><code>
->>> from libmsf.msf import Msf
+>>> from libmsf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
 >>>
@@ -480,7 +481,7 @@ Removed services: [Msf.Service(id=249, workspace=None, host=None, host_id=224, c
 ### Vulnerabilities
 
 ```python
-from libmsf.msf import Msf
+from libmsf import Msf
 from libmsf.rest import MsfRestApi
 from typing import List
 
@@ -520,7 +521,7 @@ Create vulnerability:
   <summary>Example:</summary>
 
 <pre lang="shell"><code>
->>> from libmsf.msf import Msf
+>>> from libmsf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
 >>>
@@ -585,7 +586,7 @@ Removed vulns: [Msf.Vuln(id=272, workspace=None, host=Msf.Host(id=226, workspace
 ### Loots
 
 ```python
-from libmsf.msf import Msf
+from libmsf import Msf
 from libmsf.rest import MsfRestApi
 from typing import List
 
@@ -628,7 +629,7 @@ Create loot:
   <summary>Example:</summary>
 
 <pre lang="shell"><code>
->>> from libmsf.msf import Msf
+>>> from libmsf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
 >>>
@@ -696,7 +697,7 @@ Removed loots: [Msf.Loot(id=None, workspace=None, workspace_id=215, host=None, h
 ### Notes
 
 ```python
-from libmsf.msf import Msf
+from libmsf import Msf
 from libmsf.rest import MsfRestApi
 from typing import List
 
@@ -734,7 +735,7 @@ Create note:
   <summary>Example:</summary>
 
 <pre lang="shell"><code>
->>> from libmsf.msf import Msf
+>>> from libmsf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
 >>>
@@ -797,7 +798,7 @@ Removed notes: [Msf.Note(id=40, workspace=None, workspace_id=215, host=None, hos
 ### Credentials and logins
 
 ```python
-from libmsf.msf import Msf
+from libmsf import Msf
 from libmsf.rest import MsfRestApi
 from typing import List
 
@@ -865,7 +866,7 @@ Create credentials and login:
   <summary>Example:</summary>
 
 <pre lang="shell"><code>
->>> from libmsf.msf import Msf
+>>> from libmsf import Msf
 >>> from libmsf.rest import MsfRestApi
 >>> from typing import List
 >>>
@@ -968,7 +969,7 @@ Removed creds: [Msf.Cred(id=68, workspace_id=215, username=None, private_data=No
 Code example:
 
 ```python
-from libmsf.msf import MsfData
+from libmsf import MsfData
 from libmsf.parser import MsfParser
 
 msf_parser: MsfParser = MsfParser()
