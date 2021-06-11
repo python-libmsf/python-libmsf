@@ -17,7 +17,7 @@ __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
@@ -26,8 +26,8 @@ __status__ = "Development"
 # Class MsfVariablesForTest
 class MsfVariablesForTest:
 
-    api_url: str = "https://localhost:5443"
-    api_key: str = "72a826b5b8027178cf02a0c78632dc2958b7cea5f2ae4e885ca2d617558ff114b37c1288a6e51a28"
+    api_url: Optional[str] = None
+    api_key: Optional[str] = None
     proxy: Optional[str] = None
 
     workspace: Msf.Workspace = Msf.Workspace(

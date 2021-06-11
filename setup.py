@@ -14,7 +14,7 @@ __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
@@ -51,7 +51,13 @@ setup(
         "Topic :: Education",
         "Topic :: Security",
     ],
-    install_requires=["requests", "urllib3", "dataclasses", "marshmallow"],
+    install_requires=[
+        "requests",
+        "urllib3",
+        "dataclasses",
+        "marshmallow",
+        "configparser",
+    ],
     entry_points={
         "console_scripts": [
             "msf-rest-cli=libmsf.rest:main",

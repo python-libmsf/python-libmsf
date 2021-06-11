@@ -20,7 +20,7 @@ __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
@@ -46,8 +46,8 @@ class MsfRestApi:
     # Init
     def __init__(
         self,
-        api_key: str,
-        api_url: str = "https://msf.corp.test.com:5443",
+        api_key: Optional[str] = None,
+        api_url: Optional[str] = None,
         proxy: Optional[str] = None,
     ) -> None:
         """
@@ -56,12 +56,25 @@ class MsfRestApi:
         @param api_url: MSF REST API server URL string, example: 'https://msf.corp.test.com:5443'
         @param proxy: HTTP Proxy URL string, example: 'http://127.0.0.1:8080'
         """
+        # Load api_key and api_url from metasploit config file: ~/.msf4/config
+        if api_key is None or api_url is None:
+            config: Msf.Config = Msf.load_config()
+            api_key = config.api_token
+            api_url = config.url
+        # Check metasploit api key
+        if api_key is None:
+            print("Metasploit api key is None! Please set api key!")
+            exit(1)
+        # Check metasploit api url
+        if api_url is None:
+            print("Metasploit api url is None! Please set api url!")
+            exit(2)
         self._api_url = api_url
         self._api_key = api_key
         self._session: Session = Session()
         self._session.headers.update(
             {
-                "User-Agent": "Metasploit REST API Agent/" + "0.2.1",
+                "User-Agent": "Metasploit REST API Agent/" + "0.2.2",
                 "Accept": "application/json",
                 "Connection": "close",
                 "Authorization": "Bearer " + api_key,

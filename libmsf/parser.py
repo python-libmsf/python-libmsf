@@ -20,7 +20,7 @@ __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
@@ -45,9 +45,13 @@ class MsfParser:
                     )
                 elif dataclass_object.__annotations__[key] == Union[None, datetime]:
                     dataclass_object.__dict__[key] = datetime.strptime(
-                        xml_element.findtext(key.replace("_", "-")), "%Y-%m-%d %H:%M:%S %Z"
+                        xml_element.findtext(key.replace("_", "-")),
+                        "%Y-%m-%d %H:%M:%S %Z",
                     )
-                elif dataclass_object.__annotations__[key] == Union[None, IPv4Address, IPv6Address]:
+                elif (
+                    dataclass_object.__annotations__[key]
+                    == Union[None, IPv4Address, IPv6Address]
+                ):
                     dataclass_object.__dict__[key] = ip_address(
                         xml_element.findtext(key.replace("_", "-"))
                     )

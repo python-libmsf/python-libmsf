@@ -9,24 +9,45 @@ Copyright 2021, Python Metasploit Library
 # Import
 from typing import List, Dict, Optional, Union
 from dataclasses import dataclass, field
-from marshmallow import fields, pre_load, post_load, pre_dump, post_dump, validate
+from marshmallow import fields, pre_load, post_load, pre_dump, post_dump, EXCLUDE
 from marshmallow import Schema as MarshmallowSchema
 from datetime import datetime
 from ipaddress import IPv4Address, IPv6Address, ip_address
+from pathlib import Path
+from os import path
+from configparser import ConfigParser
+
 
 # Authorship information
 __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
 
 
-@dataclass
 class Msf:
+    @dataclass
+    class Config:
+        file: str = f"{str(Path.home())}/.msf4/config"
+        url: Optional[str] = None
+        cert: Optional[str] = None
+        skip_verify: bool = False
+        api_token: Optional[str] = None
+
+        class Schema(MarshmallowSchema):
+            url = fields.String(missing=None)
+            cert = fields.String(missing=None)
+            skip_verify = fields.Boolean(missing=False)
+            api_token = fields.String(missing=None)
+
+            @post_load
+            def make_config(self, data, **kwargs):
+                return Msf.Config(**data)
+
     @dataclass
     class Workspace:
         id: int = 1
@@ -582,6 +603,23 @@ class Msf:
             @post_load
             def make_origin(self, data, **kwargs):
                 return Msf.Origin(**data)
+
+    @staticmethod
+    def load_config() -> Config:
+        config: Msf.Config = Msf.Config()
+        config_parser: ConfigParser = ConfigParser()
+        if path.isfile(config.file) and path.getsize(config.file) > 0:
+            config_parser.read(config.file)
+            default_db: Optional[str] = None
+            if "framework/database" in config_parser.sections():
+                if "default_db" in config_parser["framework/database"]:
+                    default_db = config_parser["framework/database"]["default_db"]
+            if default_db is not None:
+                if f"framework/database/{default_db}":
+                    config = Msf.Config.Schema(unknown=EXCLUDE).load(
+                        config_parser[f"framework/database/{default_db}"]
+                    )
+        return config
 
 
 @dataclass
