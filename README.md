@@ -82,6 +82,7 @@ MsfParser easy to use:
  - [urllib3](https://pypi.org/project/urllib3/)
  - [dataclasses](https://pypi.org/project/dataclasses/)
  - [marshmallow](https://pypi.org/project/marshmallow/)
+ - [configparser](https://pypi.org/project/configparser/)
 
 ## Installing
 
