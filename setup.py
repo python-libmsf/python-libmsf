@@ -54,8 +54,8 @@ setup(
     install_requires=["requests", "urllib3", "dataclasses", "marshmallow"],
     entry_points={
         "console_scripts": [
-            "msf_rest_cli=libmsf.rest:main",
-            "msf_parser_cli=libmsf.parser:main",
+            "msf-rest-cli=libmsf.rest:main",
+            "msf-parser-cli=libmsf.parser:main",
         ],
     },
     python_requires=">=3.6",

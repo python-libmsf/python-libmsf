@@ -27,7 +27,7 @@ __status__ = "Development"
 class MsfVariablesForTest:
 
     api_url: str = "https://localhost:5443"
-    api_key: str = "cf2dbb7f9d1f92839a84f9c165ee9afef3dd3a3116bc99badf45be4ae5655168c9c2c3c58621b460"
+    api_key: str = "72a826b5b8027178cf02a0c78632dc2958b7cea5f2ae4e885ca2d617558ff114b37c1288a6e51a28"
     proxy: Optional[str] = None
 
     workspace: Msf.Workspace = Msf.Workspace(
