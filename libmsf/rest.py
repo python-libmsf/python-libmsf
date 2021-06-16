@@ -8,7 +8,7 @@ Copyright 2021, Python Metasploit Library
 
 # Import
 from libmsf import Msf, MsfData
-from requests import Session, Response
+from requests import Session, Response, exceptions
 from typing import List, Dict, Type, Optional
 from dataclasses import dataclass
 from urllib3 import disable_warnings
@@ -20,7 +20,7 @@ __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
@@ -74,7 +74,7 @@ class MsfRestApi:
         self._session: Session = Session()
         self._session.headers.update(
             {
-                "User-Agent": "Metasploit REST API Agent/" + "0.2.2",
+                "User-Agent": "Metasploit REST API Agent/" + "0.2.3",
                 "Accept": "application/json",
                 "Connection": "close",
                 "Authorization": "Bearer " + api_key,
@@ -92,8 +92,11 @@ class MsfRestApi:
         try:
             self.get_workspaces()
         except AssertionError as error:
-            print("[Assert Exception] Error: " + error.args[0])
+            print(f"[Assert Exception] Error: {error}")
             exit(1)
+        except exceptions.ConnectionError as error:
+            print(f"[Connection] Error: {error}")
+            exit(2)
 
     # Check responses
 
@@ -483,9 +486,10 @@ class MsfRestApi:
         @return: None if error or MSF workspace ID integer, example: 123
         """
         workspaces = self.get_workspaces()
-        for workspace in workspaces:
-            if workspace.name == workspace_name:
-                return workspace.id
+        if isinstance(workspaces, List):
+            for workspace in workspaces:
+                if workspace.name == workspace_name:
+                    return workspace.id
         return None
 
     def get_workspace_by_id(self, workspace_id: int = 1) -> Optional[Msf.Workspace]:
@@ -498,10 +502,11 @@ class MsfRestApi:
                                                                boundary=None, description=None, owner_id=None,
                                                                limit_to_network=False, import_fingerprint=False)
         """
-        workspaces: List[Msf.Workspace] = self.get_workspaces()
-        for workspace in workspaces:
-            if workspace.id == workspace_id:
-                return workspace
+        workspaces = self.get_workspaces()
+        if isinstance(workspaces, List):
+            for workspace in workspaces:
+                if workspace.id == workspace_id:
+                    return workspace
         return None
 
     def get_host_by_id(
@@ -524,10 +529,11 @@ class MsfRestApi:
                                                           host_detail_count=0, exploit_attempt_count=0,
                                                           cred_count=0, detected_arch='', os_family='posix')
         """
-        hosts: List[Msf.Host] = self.get_hosts(workspace=workspace)
-        for host in hosts:
-            if host.id == host_id:
-                return host
+        hosts = self.get_hosts(workspace=workspace)
+        if isinstance(hosts, List):
+            for host in hosts:
+                if host.id == host_id:
+                    return host
         return None
 
     def get_service_by_id(
@@ -552,10 +558,11 @@ class MsfRestApi:
                      port=12345, proto='tcp', state='open', name='http',
                      updated_at='2021-04-15T13:45:11.577Z', info='Unit test')
         """
-        services: List[Msf.Service] = self.get_services(workspace=workspace)
-        for service in services:
-            if service.id == service_id:
-                return service
+        services = self.get_services(workspace=workspace)
+        if isinstance(services, List):
+            for service in services:
+                if service.id == service_id:
+                    return service
         return None
 
     def get_vuln_by_id(
@@ -596,9 +603,10 @@ class MsfRestApi:
                   module_refs=[])
         """
         vulns: List[Msf.Vuln] = self.get_vulns(workspace=workspace)
-        for vuln in vulns:
-            if vuln.id == vuln_id:
-                return vuln
+        if isinstance(vulns, List):
+            for vuln in vulns:
+                if vuln.id == vuln_id:
+                    return vuln
         return None
 
     def get_loot_by_id(
@@ -627,10 +635,11 @@ class MsfRestApi:
                  name='/tmp/unit.test', info='Unit test file',
                  module_run_id=None)
         """
-        loots: List[Msf.Loot] = self.get_loots(workspace=workspace)
-        for loot in loots:
-            if loot.id == loot_id:
-                return loot
+        loots = self.get_loots(workspace=workspace)
+        if isinstance(loots, List):
+            for loot in loots:
+                if loot.id == loot_id:
+                    return loot
         return None
 
     def get_note_by_id(
@@ -658,10 +667,11 @@ class MsfRestApi:
                   data='Unit test host comment',
                   critical=None, seen=None)
         """
-        notes: List[Msf.Note] = self.get_notes(workspace=workspace)
-        for note in notes:
-            if note.id == note_id:
-                return note
+        notes = self.get_notes(workspace=workspace)
+        if isinstance(notes, List):
+            for note in notes:
+                if note.id == note_id:
+                    return note
         return None
 
     def get_cred_by_id(
@@ -701,10 +711,11 @@ class MsfRestApi:
                                    updated_at='2021-04-15T18:23:58.873Z',
                                    type='Metasploit::Credential::Origin::Service'))
         """
-        creds: List[Msf.Cred] = self.get_creds(workspace=workspace)
-        for cred in creds:
-            if cred.id == cred_id:
-                return cred
+        creds = self.get_creds(workspace=workspace)
+        if isinstance(creds, List):
+            for cred in creds:
+                if cred.id == cred_id:
+                    return cred
         return None
 
     def get_login_by_id(self, login_id: int = 1) -> Optional[Msf.Login]:
@@ -718,9 +729,10 @@ class MsfRestApi:
                    updated_at='2021-04-12T17:19:49.950Z')
         """
         logins: List[Msf.Login] = self.get_logins()
-        for login in logins:
-            if login.id == login_id:
-                return login
+        if isinstance(logins, List):
+            for login in logins:
+                if login.id == login_id:
+                    return login
         return None
 
     # POST methods

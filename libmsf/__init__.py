@@ -23,7 +23,7 @@ __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
@@ -74,6 +74,15 @@ class Msf:
             owner_id = fields.String(missing=None, load_only=True)
             limit_to_network = fields.Boolean(missing=False)
             import_fingerprint = fields.Boolean(missing=False)
+
+            @post_dump(pass_many=False)
+            def clean_missing_fields(self, data, many, **kwargs):
+                clean_data = data.copy()
+                for key in filter(lambda key: data[key] is None, data):
+                    del clean_data[key]
+                for key in filter(lambda key: data[key] == -1, data):
+                    del clean_data[key]
+                return clean_data
 
             @post_load
             def make_workspace(self, data, **kwargs):
@@ -152,6 +161,15 @@ class Msf:
                     data.host = data.address
                 return data
 
+            @post_dump(pass_many=False)
+            def clean_missing_fields(self, data, many, **kwargs):
+                clean_data = data.copy()
+                for key in filter(lambda key: data[key] is None, data):
+                    del clean_data[key]
+                for key in filter(lambda key: data[key] == -1, data):
+                    del clean_data[key]
+                return clean_data
+
             @post_load
             def make_host(self, data, **kwargs):
                 host = Msf.Host(**data)
@@ -198,6 +216,15 @@ class Msf:
                 ):
                     data.host = str(data.host)
                 return data
+
+            @post_dump(pass_many=False)
+            def clean_missing_fields(self, data, many, **kwargs):
+                clean_data = data.copy()
+                for key in filter(lambda key: data[key] is None, data):
+                    del clean_data[key]
+                for key in filter(lambda key: data[key] == -1, data):
+                    del clean_data[key]
+                return clean_data
 
             @post_load
             def make_service(self, data, **kwargs):
@@ -260,6 +287,15 @@ class Msf:
                 ):
                     data.host = str(data.host)
                 return data
+
+            @post_dump(pass_many=False)
+            def clean_missing_fields(self, data, many, **kwargs):
+                clean_data = data.copy()
+                for key in filter(lambda key: data[key] is None, data):
+                    del clean_data[key]
+                for key in filter(lambda key: data[key] == -1, data):
+                    del clean_data[key]
+                return clean_data
 
             @pre_load(pass_many=False)
             def pre_load_vuln(self, data, **kwargs):
@@ -329,6 +365,15 @@ class Msf:
                 ):
                     data.host = str(data.host)
                 return data
+
+            @post_dump(pass_many=False)
+            def clean_missing_fields(self, data, many, **kwargs):
+                clean_data = data.copy()
+                for key in filter(lambda key: data[key] is None, data):
+                    del clean_data[key]
+                for key in filter(lambda key: data[key] == -1, data):
+                    del clean_data[key]
+                return clean_data
 
             @post_load
             def make_loot(self, data, **kwargs):
@@ -410,7 +455,7 @@ class Msf:
         port: int = -1
         service_name: Optional[str] = None
         protocol: Optional[str] = None
-        origin_type: Optional[str] = None
+        origin_type: str = "service"
         module_fullname: Optional[str] = None
         created_at: Optional[datetime] = None
         updated_at: Optional[datetime] = None
@@ -435,7 +480,7 @@ class Msf:
             port = fields.Integer(missing=-1)
             service_name = fields.String(missing=None)
             protocol = fields.String(missing=None)
-            origin_type = fields.String(missing=None)
+            origin_type = fields.String(missing="service")
             module_fullname = fields.String(missing=None)
             created_at = fields.DateTime(
                 "%Y-%m-%dT%H:%M:%S.%fZ", missing=None, load_only=True
@@ -468,6 +513,15 @@ class Msf:
                 ):
                     data.address = str(data.address)
                 return data
+
+            @post_dump(pass_many=False)
+            def clean_missing_fields(self, data, many, **kwargs):
+                clean_data = data.copy()
+                for key in filter(lambda key: data[key] is None, data):
+                    del clean_data[key]
+                for key in filter(lambda key: data[key] == -1, data):
+                    del clean_data[key]
+                return clean_data
 
             @post_load
             def make_cred(self, data, **kwargs):
@@ -526,6 +580,15 @@ class Msf:
                     data["core"] = {"id": data["core_id"]}
                     del data["core_id"]
                 return data
+
+            @post_dump(pass_many=False)
+            def clean_missing_fields(self, data, many, **kwargs):
+                clean_data = data.copy()
+                for key in filter(lambda key: data[key] is None, data):
+                    del clean_data[key]
+                for key in filter(lambda key: data[key] == -1, data):
+                    del clean_data[key]
+                return clean_data
 
             @post_load
             def make_login(self, data, **kwargs):
