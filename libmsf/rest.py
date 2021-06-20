@@ -20,7 +20,7 @@ __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
@@ -74,7 +74,7 @@ class MsfRestApi:
         self._session: Session = Session()
         self._session.headers.update(
             {
-                "User-Agent": "Metasploit REST API Agent/" + "0.2.3",
+                "User-Agent": "Metasploit REST API Agent/" + "0.2.4",
                 "Accept": "application/json",
                 "Connection": "close",
                 "Authorization": "Bearer " + api_key,

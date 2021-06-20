@@ -23,7 +23,7 @@ __author__ = "Vladimir Ivanov"
 __copyright__ = "Copyright 2021, Python Metasploit Library"
 __credits__ = [""]
 __license__ = "MIT"
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 __maintainer__ = "Vladimir Ivanov"
 __email__ = "ivanov.vladimir.mail@gmail.com"
 __status__ = "Development"
@@ -435,6 +435,18 @@ class Msf:
                 for key in filter(lambda key: data[key] == -1, data):
                     del clean_data[key]
                 return clean_data
+
+            @pre_load(pass_many=False)
+            def pre_make_note(self, data, many, **kwargs):
+                if "data" in data:
+                    if isinstance(data["data"], Dict):
+                        if "output" in data["data"]:
+                            data["data"] = str(data["data"]["output"])
+                        else:
+                            data["data"] = str(data["data"])
+                    else:
+                        data["data"] = str(data["data"])
+                return data
 
             @post_load
             def make_note(self, data, **kwargs):
